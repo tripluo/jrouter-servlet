@@ -23,20 +23,19 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
+import jrouter.annotation.Dynamic;
 
 /**
  * A simple implementation of the {@link java.util.Map} interface to handle a collection of request
  * parameters.
  */
+@Dynamic
 public class RequestMap extends AbstractMap<String, String[]> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /** the http request parameters */
-    private Map<String, String[]> parameters;
-
-    /** the original http request */
-    private HttpServletRequest request;
+    private final Map<String, String[]> parameters;
 
     /**
      * Saves the request to use as the backing for getting and setting values
@@ -44,16 +43,7 @@ public class RequestMap extends AbstractMap<String, String[]> implements Seriali
      * @param request the http servlet request.
      */
     public RequestMap(final HttpServletRequest request) {
-        this.request = request;
-    }
-
-    /**
-     * Check and set new parameters.
-     */
-    private void set() {
-        if (parameters == null) {
-            parameters = new HashMap<String, String[]>(request.getParameterMap());
-        }
+        parameters = new HashMap<String, String[]>(request.getParameterMap());
     }
 
     /**
@@ -72,7 +62,6 @@ public class RequestMap extends AbstractMap<String, String[]> implements Seriali
      */
     @Override
     public Set<Entry<String, String[]>> entrySet() {
-        set();
         return parameters.entrySet();
     }
 
@@ -86,7 +75,6 @@ public class RequestMap extends AbstractMap<String, String[]> implements Seriali
      */
     @Override
     public String[] get(Object key) {
-        set();
         return parameters.get(key);
     }
 
@@ -100,7 +88,6 @@ public class RequestMap extends AbstractMap<String, String[]> implements Seriali
      */
     @Override
     public String[] put(String key, String[] value) {
-        set();
         return parameters.put(key, value);
     }
 
@@ -114,7 +101,6 @@ public class RequestMap extends AbstractMap<String, String[]> implements Seriali
      */
     @Override
     public String[] remove(Object key) {
-        set();
         return parameters.remove(key);
     }
 }

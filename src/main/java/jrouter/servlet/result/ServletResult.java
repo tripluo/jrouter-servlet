@@ -20,9 +20,8 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import jrouter.ActionInvocation;
 import jrouter.annotation.ResultType;
-import jrouter.servlet.ServletThreadContext;
+import jrouter.servlet.ServletActionInvocation;
 
 /**
  * Result for http servlet, include "forward" and "redirect".
@@ -43,8 +42,8 @@ public class ServletResult {
      * @see javax.servlet.RequestDispatcher#forward(javax.servlet.ServletRequest, javax.servlet.ServletResponse)
      */
     @ResultType(type = FORWARD)
-    public void forward(ActionInvocation invocation) throws IOException, ServletException {
-        HttpServletResponse response = ServletThreadContext.getResponse();
+    public void forward(ServletActionInvocation invocation) throws IOException, ServletException {
+        HttpServletResponse response = invocation.getResponse();
         if (response.isCommitted())
             return;
 
@@ -53,7 +52,7 @@ public class ServletResult {
             location = '/' + location;
         }
 
-        HttpServletRequest request = ServletThreadContext.getRequest();
+        HttpServletRequest request = invocation.getRequest();
 //        if (request.getContextPath() != null && request.getContextPath().length() > 0) {
 //            location = request.getContextPath() + location;
 //        }
@@ -64,8 +63,8 @@ public class ServletResult {
      * @see HttpServletResponse#sendRedirect(java.lang.String)
      */
     @ResultType(type = REDIRECT)
-    public void redirect(ActionInvocation invocation) throws IOException {
-        HttpServletResponse response = ServletThreadContext.getResponse();
+    public void redirect(ServletActionInvocation invocation) throws IOException {
+        HttpServletResponse response = invocation.getResponse();
         if (response.isCommitted())
             return;
 
@@ -74,7 +73,7 @@ public class ServletResult {
             location = '/' + location;
         }
 
-        HttpServletRequest request = ServletThreadContext.getRequest();
+        HttpServletRequest request = invocation.getRequest();
         if (request.getContextPath() != null && request.getContextPath().length() > 0) {
             location = request.getContextPath() + location;
         }

@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import jrouter.ActionFactory;
 import jrouter.config.Configuration;
 import jrouter.impl.InvocationProxyException;
+import jrouter.servlet.ServletActionFactory;
 import jrouter.servlet.ServletThreadContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,8 +47,14 @@ public class JRouterFilter implements Filter {
      */
     protected String configLocation = "jrouter.xml";
 
+    /** Use ThreadLocal to store Http parameter object or not */
+    protected boolean useThreadLocal = true;
+
     /** JRouter ActionFactory */
     protected ActionFactory actionFactory;
+
+    /** Check if is ServletActionFactory */
+    private boolean isServletActionFactory = false;
 
     /**
      * Http ServletContext reference.
@@ -59,20 +66,23 @@ public class JRouterFilter implements Filter {
         String encode = filterConfig.getInitParameter("encoding");
         String conf = filterConfig.getInitParameter("configLocation");
         String factoryName = filterConfig.getInitParameter("factoryName");
-
-        if (null != encode)
+        String _useThreadLocal = filterConfig.getInitParameter("useThreadLocal");
+        //default true if not set
+        if (_useThreadLocal != null)
+            useThreadLocal = Boolean.parseBoolean(_useThreadLocal);
+        if (encode != null)
             this.encoding = encode;
-        if (null != conf)
+        if (conf != null)
             this.configLocation = conf;
 
         log.info("Set character encoding : " + encoding);
-
+        servletContext = filterConfig.getServletContext();
         try {
-            //初始化ServletContext, 提供其他模块初始化调用
-            servletContext = filterConfig.getServletContext();
-            ServletThreadContext.set(new ServletThreadContext(new HashMap<String, Object>()));
-            ServletThreadContext.setServletContext(servletContext);
-
+            if (useThreadLocal) {
+                //初始化ServletContext, 提供其他模块初始化调用
+                ServletThreadContext.set(new ServletThreadContext(new HashMap<String, Object>()));
+                ServletThreadContext.setServletContext(servletContext);
+            }
             //create ActionFactory
             actionFactory = createActionFactory(filterConfig);
 
@@ -80,8 +90,10 @@ public class JRouterFilter implements Filter {
                 servletContext.setAttribute(factoryName, actionFactory);
                 log.info("Set ActionFactory's name in ServletContext : " + factoryName);
             }
+            isServletActionFactory = (actionFactory instanceof ServletActionFactory);
         } finally {
-            ServletThreadContext.remove();
+            if (useThreadLocal)
+                ServletThreadContext.remove();
         }
     }
 
@@ -108,16 +120,24 @@ public class JRouterFilter implements Filter {
         request.setCharacterEncoding(encoding);
         response.setCharacterEncoding(encoding);
 
-        createServletThreadContext(request, response);
+        //create thread local
+        if (useThreadLocal)
+            createServletThreadContext(request, response);
         try {
             //action url and invoke
-            actionFactory.invokeAction(getActionPath(request));
+            if (isServletActionFactory) {
+                ((ServletActionFactory) actionFactory).invokeAction(getActionPath(request), request, response, servletContext);
+            } else {
+                actionFactory.invokeAction(getActionPath(request));
+            }
+
             if (!response.isCommitted())
                 chain.doFilter(request, response);
         } catch (InvocationProxyException e) {
             throw new ServletException(e.getSource());
         } finally {
-            ServletThreadContext.remove();
+            if (useThreadLocal)
+                ServletThreadContext.remove();
         }
     }
 
@@ -141,7 +161,7 @@ public class JRouterFilter implements Filter {
     protected void createServletThreadContext(HttpServletRequest request,
             HttpServletResponse response) {
         if (ServletThreadContext.get() == null) {
-            ServletThreadContext.set(new ServletThreadContext(new HashMap<String, Object>()));
+            ServletThreadContext.set(new ServletThreadContext(new HashMap<String, Object>(8)));
             ServletThreadContext.setServletContext(servletContext);
         }
         ServletThreadContext.setRequest(request);
@@ -153,6 +173,7 @@ public class JRouterFilter implements Filter {
         if (actionFactory != null) {
             actionFactory.clear();
         }
-        ServletThreadContext.remove();
+        if (useThreadLocal)
+            ServletThreadContext.remove();
     }
 }

@@ -21,7 +21,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.jsp.PageContext;
 import jrouter.impl.ThreadContext;
 
 /**
@@ -36,20 +35,17 @@ public class ServletThreadContext extends ThreadContext {
     /** Http response */
     private HttpServletResponse response;
 
-    /** Http request parameters map */
+    /** Http modifiable request parameters map */
     private RequestMap requestMap;
-
-    /** page context */
-    private PageContext pageContext;
 
     /** ServletContext */
     private ServletContext servletContext;
 
-    /** Exception */
-    private Exception exception;
-
     /** store key-value */
     private Map<String, Object> contextMap;
+
+    /** Exception */
+    private Exception exception;
 
     /**
      * 构造一个指定存储键值对<code>Map</code>的ServletThreadContext。
@@ -68,24 +64,6 @@ public class ServletThreadContext extends ThreadContext {
      */
     public static ServletThreadContext get() {
         return ThreadContext.get();
-    }
-
-    /**
-     * Returns the HTTP page context.
-     *
-     * @param pageContext the HTTP page context.
-     */
-    public static void setPageContext(PageContext pageContext) {
-        get().pageContext = pageContext;
-    }
-
-    /**
-     * Returns the HTTP page context.
-     *
-     * @return the HTTP page context.
-     */
-    public static PageContext getPageContext() {
-        return get().pageContext;
     }
 
     /**
@@ -163,24 +141,6 @@ public class ServletThreadContext extends ThreadContext {
     }
 
     /**
-     * Get the exception.
-     *
-     * @return the exception
-     */
-    public static Exception getException() {
-        return get().exception;
-    }
-
-    /**
-     * Store the exception.
-     *
-     * @param exception The exception
-     */
-    public static void setException(Exception exception) {
-        get().exception = exception;
-    }
-
-    /**
      * 设置ThreadContext中的Map容器。
      *
      * @param contextMap the context map.
@@ -196,5 +156,23 @@ public class ServletThreadContext extends ThreadContext {
      */
     public static Map<String, Object> getContextMap() {
         return get().contextMap;
+    }
+
+    /**
+     * Get the exception.
+     *
+     * @return the exception
+     */
+    public static Exception getException() {
+        return get().exception;
+    }
+
+    /**
+     * Store the exception.
+     *
+     * @param exception The exception
+     */
+    public static void setException(Exception exception) {
+        get().exception = exception;
     }
 }

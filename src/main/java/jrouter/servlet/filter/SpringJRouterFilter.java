@@ -42,10 +42,10 @@ public class SpringJRouterFilter extends JRouterFilter {
     @Override
     public void init(FilterConfig filterConfig) {
         String useSpring = filterConfig.getInitParameter("useSpringObjectFactory");
+        //default true if not set
         if (useSpring != null)
             useSpringObjectFactory = Boolean.parseBoolean(useSpring);
         super.init(filterConfig);
-
     }
 
     /**
