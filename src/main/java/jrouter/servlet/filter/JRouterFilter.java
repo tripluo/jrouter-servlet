@@ -17,7 +17,6 @@
 package jrouter.servlet.filter;
 
 import java.io.IOException;
-import java.util.HashMap;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -80,7 +79,6 @@ public class JRouterFilter implements Filter {
         try {
             if (useThreadLocal) {
                 //初始化ServletContext, 提供其他模块初始化调用
-                ServletThreadContext.set(new ServletThreadContext(new HashMap<String, Object>()));
                 ServletThreadContext.setServletContext(servletContext);
             }
             //create ActionFactory
@@ -160,10 +158,6 @@ public class JRouterFilter implements Filter {
      */
     protected void createServletThreadContext(HttpServletRequest request,
             HttpServletResponse response) {
-        if (ServletThreadContext.get() == null) {
-            ServletThreadContext.set(new ServletThreadContext(new HashMap<String, Object>(8)));
-            ServletThreadContext.setServletContext(servletContext);
-        }
         ServletThreadContext.setRequest(request);
         ServletThreadContext.setResponse(response);
     }
@@ -173,7 +167,6 @@ public class JRouterFilter implements Filter {
         if (actionFactory != null) {
             actionFactory.clear();
         }
-        if (useThreadLocal)
-            ServletThreadContext.remove();
+        ServletThreadContext.remove();
     }
 }

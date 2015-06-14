@@ -62,4 +62,11 @@ public interface ServletActionInvocation extends ActionInvocation {
      * @return the servlet context.
      */
     ServletContext getServletContext();
+
+    /**
+     * Get Invocation Context Map.
+     *
+     * @return the Context Map.
+     */
+    Map<String, Object> getContextMap();
 }

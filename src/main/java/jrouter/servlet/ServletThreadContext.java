@@ -16,18 +16,38 @@
  */
 package jrouter.servlet;
 
+import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import jrouter.impl.ThreadContext;
+import jrouter.ActionInvocation;
 
 /**
- * ServletThreadContext是一个线程变量，继承自{@link ThreadContext}。
- * ServletThreadContext包含http的相关的变量，因而它们都是线程安全的。
+ * ServletThreadContext是一个线程变量，使用了一个公共的{@link ThreadLocal}。
+ * ServletThreadContext包含一个{@link ActionInvocation}，存储线程安全的Action运行时上下文。
+ * ServletThreadContext包含http的相关的变量。
+ * ServletThreadContext包含一个contextMap变量，存储自定义的key-value。
+ * ServletThreadContext包含一个Exception对象，存储发生的异常。
+ *
+ * @see ServletActionFactory.DefaultServletActionFactory
+ * @see ServletActionFactory.DefaultServletActionInvocation
  */
-public class ServletThreadContext extends ThreadContext {
+public class ServletThreadContext {
+
+    /** Thread Safe */
+    private static final ThreadLocal<ServletThreadContext> threadLocal = new ThreadLocal<ServletThreadContext>() {
+
+        @Override
+        protected ServletThreadContext initialValue() {
+            return new ServletThreadContext(new HashMap<String, Object>(8));
+        }
+
+    };
+
+    /** Action运行时上下文 */
+    private ActionInvocation<?> actionInvocation;
 
     /** Http request */
     private HttpServletRequest request;
@@ -41,8 +61,8 @@ public class ServletThreadContext extends ThreadContext {
     /** ServletContext */
     private ServletContext servletContext;
 
-    /** store key-value */
-    private Map<String, Object> contextMap;
+    /** Store key-value */
+    private final Map<String, Object> contextMap;
 
     /** Exception */
     private Exception exception;
@@ -52,8 +72,7 @@ public class ServletThreadContext extends ThreadContext {
      *
      * @param contextMap 指定存储键值对的Map。
      */
-    public ServletThreadContext(Map<String, Object> contextMap) {
-        super();
+    private ServletThreadContext(Map<String, Object> contextMap) {
         this.contextMap = contextMap;
     }
 
@@ -62,8 +81,37 @@ public class ServletThreadContext extends ThreadContext {
      *
      * @return 前线程副本中的ServletThreadContext。
      */
-    public static ServletThreadContext get() {
-        return ThreadContext.get();
+    private static ServletThreadContext get() {
+        return threadLocal.get();
+    }
+
+    /**
+     * 移除前线程副本中的ServletThreadContext。
+     */
+    public static void remove() {
+        threadLocal.remove();
+    }
+
+    /**
+     * 返回Action运行时上下文。
+     *
+     * @param <T> Action运行时上下文类型。
+     *
+     * @return Action运行时上下文。
+     *
+     * @see ServletActionFactory.DefaultServletActionFactory#createActionInvocation
+     */
+    public static <T extends ActionInvocation> T getActionInvocation() {
+        return (T) get().actionInvocation;
+    }
+
+    /**
+     * 设置Action运行时上下文。
+     *
+     * @param actionInvocation Action运行时上下文。
+     */
+    public static void setActionInvocation(ActionInvocation<?> actionInvocation) {
+        get().actionInvocation = actionInvocation;
     }
 
     /**
@@ -138,15 +186,6 @@ public class ServletThreadContext extends ThreadContext {
      */
     public static void setServletContext(ServletContext servletContext) {
         get().servletContext = servletContext;
-    }
-
-    /**
-     * 设置ThreadContext中的Map容器。
-     *
-     * @param contextMap the context map.
-     */
-    public static void setContextMap(Map<String, Object> contextMap) {
-        get().contextMap = contextMap;
     }
 
     /**
