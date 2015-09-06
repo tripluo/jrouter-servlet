@@ -5,7 +5,7 @@
     <groupId>jrouter</groupId>
     <artifactId>jrouter-servlet</artifactId>
     <packaging>jar</packaging>
-    <version>1.6.7</version>
+    <version>1.7.0</version>
     <name>JRouter-servlet</name>
     <url>http://git.oschina.net/sundancer/jrouter-servlet/</url>
     <dependencies>
@@ -13,7 +13,7 @@
         <dependency>
             <groupId>jrouter</groupId>
             <artifactId>jrouter</artifactId>
-            <version>1.6.7</version>
+            <version>1.7.0</version>
         </dependency>
 
         <!-- logback -->
@@ -122,7 +122,7 @@
     </build>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.version>4.1.6.RELEASE</spring.version>
+        <spring.version>4.2.1.RELEASE</spring.version>
     </properties>
     <description>jrouter for servlet</description>
 </project>

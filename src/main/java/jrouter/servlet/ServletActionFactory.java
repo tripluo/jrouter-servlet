@@ -32,7 +32,7 @@ import jrouter.annotation.Result;
 import jrouter.impl.DefaultActionFactory;
 
 /**
- * ServletActionFactory to store the ActionInvocation in thread local variable.
+ * ServletActionFactory invoke Action with Http parameters.
  */
 public interface ServletActionFactory extends ActionFactory {
 
@@ -67,15 +67,6 @@ public interface ServletActionFactory extends ActionFactory {
 
         /* Action path是否大小写敏感，默认区分大小写 **/
         private boolean actionPathCaseSensitive = true;
-
-        /**
-         * 构造DefaultServletActionFactory并初始化数据。
-         *
-         * @see DefaultActionFactory
-         */
-        public DefaultServletActionFactory() {
-            super();
-        }
 
         /**
          * 根据指定的键值映射构造初始化数据的ServletActionFactory对象。
@@ -118,7 +109,7 @@ public interface ServletActionFactory extends ActionFactory {
                         (HttpServletRequest) params[0],
                         (HttpServletResponse) params[1],
                         (ServletContext) params[2],
-                        new HashMap<String, Object>(8));
+                        ServletThreadContext.getContextMap());
             }
             //use ThreadLocal
             if (servletInvocation == null && useThreadLocal) {
@@ -134,8 +125,15 @@ public interface ServletActionFactory extends ActionFactory {
                 ServletThreadContext.setActionInvocation(servletInvocation);
             }
             if (servletInvocation != null) {
-                //pass DefaultServletActionInvocation as parameter to the converter
+                //pass DefaultServletActionInvocation as parameter to the converter if needed
                 invocation.setParameterConverter(invocation.getActionFactory().getConverterFactory().getParameterConverter(servletInvocation));
+                //重设调用ActionInvocation的转换参数
+                invocation.setConvertParameters(
+                        new Object[]{
+                            servletInvocation.getRequest(),
+                            servletInvocation.getResponse(),
+                            servletInvocation.getServletContext(),
+                            servletInvocation});
                 return servletInvocation;
             } else {
                 //retrun ActionInvocation if can't get any http parameters and null DefaultServletActionInvocation
@@ -271,6 +269,16 @@ public interface ServletActionFactory extends ActionFactory {
         }
 
         @Override
+        public void setConvertParameters(Object... params) {
+            invocation.setConvertParameters(params);
+        }
+
+        @Override
+        public Object[] getConvertParameters() {
+            return invocation.getConvertParameters();
+        }
+
+        @Override
         public HttpServletRequest getRequest() {
             return this.request;
         }
@@ -299,5 +307,6 @@ public interface ServletActionFactory extends ActionFactory {
         public Map<String, Object> getContextMap() {
             return contextMap;
         }
+
     }
 }

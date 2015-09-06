@@ -29,6 +29,11 @@ import jrouter.servlet.ServletActionInvocation;
 public class ServletResult {
 
     /**
+     * "action_forward" symbol.
+     */
+    public static final String ACTION_FORWARD = "action_forward";
+
+    /**
      * "forward" symbol.
      */
     public static final String FORWARD = "forward";
@@ -37,6 +42,21 @@ public class ServletResult {
      * "redirect" symbol.
      */
     public static final String REDIRECT = "redirect";
+
+    /**
+     * Action结果直接调用映射的Action，类似forward结果类型。
+     * forward可多次关联调用，需自行判断循环调用。
+     *
+     * @param invocation Action运行时上下文。
+     *
+     * @return 返回forward后的调用结果。
+     * 
+     * @see jrouter.result.DefaultResult#actionForward(jrouter.ActionInvocation) 
+     */
+    @ResultType(type = ACTION_FORWARD)
+    public static Object actionForward(ServletActionInvocation invocation) {
+        return invocation.getActionFactory().invokeAction(invocation.getResult().location(), invocation.getParameters());
+    }
 
     /**
      * @see javax.servlet.RequestDispatcher#forward(javax.servlet.ServletRequest, javax.servlet.ServletResponse)

@@ -21,6 +21,7 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import jrouter.ActionFactory;
+import jrouter.NotFoundException;
 import jrouter.config.Configuration;
 import jrouter.impl.InvocationProxyException;
 import jrouter.servlet.ServletActionFactory;
@@ -55,6 +56,9 @@ public class JRouterFilter implements Filter {
     /** Check if is ServletActionFactory */
     private boolean isServletActionFactory = false;
 
+    /** Check if need to log NotFoundException */
+    private boolean logNotFoundException = true;
+
     /**
      * Http ServletContext reference.
      */
@@ -62,18 +66,21 @@ public class JRouterFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) {
-        String encode = filterConfig.getInitParameter("encoding");
+        String _encoding = filterConfig.getInitParameter("encoding");
         String conf = filterConfig.getInitParameter("configLocation");
         String factoryName = filterConfig.getInitParameter("factoryName");
         String _useThreadLocal = filterConfig.getInitParameter("useThreadLocal");
+        String _logNotFoundException = filterConfig.getInitParameter("logNotFoundException");
         //default true if not set
         if (_useThreadLocal != null)
             useThreadLocal = Boolean.parseBoolean(_useThreadLocal);
-        if (encode != null)
-            this.encoding = encode;
+        if (_encoding != null)
+            this.encoding = _encoding;
         if (conf != null)
             this.configLocation = conf;
-
+        //default true if not set
+        if (_logNotFoundException != null)
+            logNotFoundException = Boolean.parseBoolean(_logNotFoundException);
         log.info("Set character encoding : " + encoding);
         servletContext = filterConfig.getServletContext();
         try {
@@ -128,9 +135,13 @@ public class JRouterFilter implements Filter {
             } else {
                 actionFactory.invokeAction(getActionPath(request));
             }
-
             if (!response.isCommitted())
                 chain.doFilter(request, response);
+        } catch (NotFoundException e) {
+            if (logNotFoundException) {
+                log.error(e.getMessage(), e);
+            }
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, e.getMessage());
         } catch (InvocationProxyException e) {
             throw new ServletException(e.getSource());
         } finally {
