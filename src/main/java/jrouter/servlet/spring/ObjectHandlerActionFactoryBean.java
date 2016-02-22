@@ -65,9 +65,9 @@ public class ObjectHandlerActionFactoryBean extends DefaultActionFactoryBean<Obj
 
     /**
      *
-     * 设置默认非<code>String</code>类型对象的结果类型处理对象。
+     * 设置默认非{@code String}类型对象的结果类型处理对象。
      *
-     * @param defaultObjectResultType 非<code>String</code>对象的结果类型处理对象。
+     * @param defaultObjectResultType 非{@code String}对象的结果类型处理对象。
      */
     public void setDefaultObjectResultType(String defaultObjectResultType) {
         this.defaultObjectResultType = defaultObjectResultType;

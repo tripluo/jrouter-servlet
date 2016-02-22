@@ -68,7 +68,7 @@ public class ServletThreadContext {
     private Exception exception;
 
     /**
-     * 构造一个指定存储键值对<code>Map</code>的ServletThreadContext。
+     * 构造一个指定存储键值对{@code Map}的ServletThreadContext。
      *
      * @param contextMap 指定存储键值对的Map。
      */
@@ -140,6 +140,15 @@ public class ServletThreadContext {
      */
     public static HttpSession getSession() {
         return getRequest().getSession();
+    }
+
+    /**
+     * Gets the HTTP servlet session object.
+     *
+     * @return the HTTP servlet session object.
+     */
+    public static HttpSession getSession(boolean create) {
+        return getRequest().getSession(create);
     }
 
     /**

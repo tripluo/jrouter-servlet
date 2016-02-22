@@ -8,8 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 提供非<code>String</code>类型的结果类型处理，
- * 及可配置的类型（Class）-> 结果类型<code>ResultTypeProxy</code>映射。
+ * 提供非{@code String}类型的结果类型处理，
+ * 及可配置的类型{@code Class} -> 结果类型{@link ResultTypeProxy}映射。
  */
 public class ObjectHandlerActionFactory extends ServletActionFactory.DefaultServletActionFactory {
 
@@ -52,12 +52,12 @@ public class ObjectHandlerActionFactory extends ServletActionFactory.DefaultServ
     }
 
     /**
-     * 设置默认非<code>String</code>类型对象的结果类型处理对象。
-     * 注意即使设置了<code>String</code>类型的对象也并不会调用invokeObjectResult方法。
+     * 设置默认非{@code String}类型对象的结果类型处理对象。
+     * 注意即使设置了{@code String}类型的对象也并不会调用invokeObjectResult方法。
      *
      * @see #invokeObjectResult(jrouter.ActionInvocation, java.lang.Object)
      *
-     * @param defaultObjectHandler 非<code>String</code>对象的结果类型处理对象。
+     * @param defaultObjectHandler 非{@code String}对象的结果类型处理对象。
      */
     public void setDefaultObjectHandler(ResultTypeProxy defaultObjectHandler) {
         this.defaultObjectHandler = defaultObjectHandler;

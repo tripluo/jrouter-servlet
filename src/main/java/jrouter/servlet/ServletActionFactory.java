@@ -17,7 +17,6 @@
 package jrouter.servlet;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -109,6 +108,7 @@ public interface ServletActionFactory extends ActionFactory {
                         (HttpServletRequest) params[0],
                         (HttpServletResponse) params[1],
                         (ServletContext) params[2],
+                        //TODO
                         ServletThreadContext.getContextMap());
             }
             //use ThreadLocal
@@ -236,6 +236,11 @@ public interface ServletActionFactory extends ActionFactory {
         @Override
         public Object invokeActionOnly(Object... params) throws JRouterException {
             return invocation.invokeActionOnly(params);
+        }
+
+        @Override
+        public String getActionPath() {
+            return invocation.getActionPath();
         }
 
         @Override
