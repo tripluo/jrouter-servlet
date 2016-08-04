@@ -17,8 +17,10 @@
 package jrouter.servlet.filter;
 
 import java.io.IOException;
+import java.util.Map;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import jrouter.ActionFactory;
 import jrouter.NotFoundException;
@@ -39,8 +41,15 @@ public class JRouterFilter implements Filter {
     /** Log */
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    /** Set http request and response encoding, use UTF-8 as default */
-    protected String encoding = "UTF-8";
+    /** Set http request and response encoding */
+    protected String encoding = null;
+
+    /**
+     * 是否对HttpServletRequest Parameter值做去除首位空白处理；默认不处理。
+     *
+     * @see HttpServletRequest#getParameter(java.lang.String)
+     */
+    private boolean trimRequestParameter = false;
 
     /**
      * Location of the jrouter ActionFactory's configuration file, default load resource file jrouter.xml.
@@ -66,7 +75,8 @@ public class JRouterFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) {
-        String _encoding = filterConfig.getInitParameter("encoding");
+        this.encoding = filterConfig.getInitParameter("encoding");
+        String _trimRequestParameter = filterConfig.getInitParameter("trimRequestParameter");
         String conf = filterConfig.getInitParameter("configLocation");
         String factoryName = filterConfig.getInitParameter("factoryName");
         String _useThreadLocal = filterConfig.getInitParameter("useThreadLocal");
@@ -74,8 +84,8 @@ public class JRouterFilter implements Filter {
         //default true if not set
         if (_useThreadLocal != null)
             useThreadLocal = Boolean.parseBoolean(_useThreadLocal);
-        if (_encoding != null)
-            this.encoding = _encoding;
+        if (_trimRequestParameter != null)
+            this.trimRequestParameter = Boolean.parseBoolean(_trimRequestParameter);
         if (conf != null)
             this.configLocation = conf;
         //default true if not set
@@ -121,10 +131,16 @@ public class JRouterFilter implements Filter {
             IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
-
-        request.setCharacterEncoding(encoding);
-        response.setCharacterEncoding(encoding);
-
+        if (encoding != null) {
+            request.setCharacterEncoding(encoding);
+            response.setCharacterEncoding(encoding);
+        }
+        if (trimRequestParameter) {
+            Map map = request.getParameterMap();
+            if (!(map == null || map.isEmpty())) {
+                request = new TrimParameterRequestWraper(request);
+            }
+        }
         //create thread local
         if (useThreadLocal)
             createServletThreadContext(request, response);
@@ -179,5 +195,28 @@ public class JRouterFilter implements Filter {
             actionFactory.clear();
         }
         ServletThreadContext.remove();
+    }
+
+    /** TrimParameterRequestWraper */
+    private static final class TrimParameterRequestWraper extends HttpServletRequestWrapper {
+
+        /**
+         * Constructs a request object wrapping the given request.
+         *
+         * @throws java.lang.IllegalArgumentException if the request is null
+         */
+        public TrimParameterRequestWraper(HttpServletRequest request) {
+            super(request);
+        }
+
+        @Override
+        public String getParameter(String name) {
+            String val = super.getParameter(name);
+            if (val != null) {
+                val = val.trim();
+            }
+            return val;
+        }
+
     }
 }

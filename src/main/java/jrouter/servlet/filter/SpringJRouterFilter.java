@@ -52,6 +52,8 @@ public class SpringJRouterFilter extends JRouterFilter {
      * A hook to give subclass another way to create ActionFactory。
      *
      * @param filterConfig 过滤器配置。
+     *
+     * @return ActionFactory bean.
      */
     @Override
     protected ActionFactory createActionFactory(final FilterConfig filterConfig) {

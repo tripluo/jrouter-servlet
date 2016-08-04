@@ -29,7 +29,7 @@ public class ObjectHandlerActionFactory extends ServletActionFactory.DefaultServ
     }
 
     /**
-     * object class to ResultType mapping.
+     * Object class to ResultType mapping.
      *
      * 完全类型匹配，不考虑父子类继承等。
      */
@@ -45,7 +45,7 @@ public class ObjectHandlerActionFactory extends ServletActionFactory.DefaultServ
     }
 
     @Override
-    protected Object invokeUndefinedResult(ActionInvocation<?> invocation, String resInfo) {
+    protected Object invokeUndefinedResult(ActionInvocation invocation, String resInfo) {
         LOG.debug("Invoking undefined String Result [{}] at {}, use defaultObjectHandler [{}] ",
                 resInfo, invocation.getActionProxy().getMethodInfo(), defaultObjectHandler);
         return MethodUtil.invoke(defaultObjectHandler, invocation);

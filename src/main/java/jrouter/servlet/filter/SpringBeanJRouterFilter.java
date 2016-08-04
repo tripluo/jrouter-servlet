@@ -43,6 +43,8 @@ public class SpringBeanJRouterFilter extends SpringJRouterFilter {
      * 设置ActionFactory为spring中指定的bean。
      *
      * @param filterConfig 过滤器配置。
+     *
+     * @return ActionFactory bean.
      */
     @Override
     protected ActionFactory createActionFactory(FilterConfig filterConfig) {

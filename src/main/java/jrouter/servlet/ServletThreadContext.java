@@ -89,6 +89,13 @@ public class ServletThreadContext {
      * 移除前线程副本中的ServletThreadContext。
      */
     public static void remove() {
+        Map map = null;
+        if ((map = getRequestParameters()) != null) {
+            map.clear();
+        }
+        if ((map = getContextMap()) != null) {
+            map.clear();
+        }
         threadLocal.remove();
     }
 

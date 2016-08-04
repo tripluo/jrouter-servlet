@@ -27,6 +27,7 @@ import jrouter.ActionInvocation;
 import jrouter.ActionProxy;
 import jrouter.JRouterException;
 import jrouter.ParameterConverter;
+import jrouter.annotation.Dynamic;
 import jrouter.annotation.Result;
 import jrouter.impl.DefaultActionFactory;
 
@@ -177,6 +178,7 @@ public interface ServletActionFactory extends ActionFactory {
     /**
      * 扩展ActionInvocation，提供获取Http参数对象，并提供给参数转换器。
      */
+    @Dynamic
     public static class DefaultServletActionInvocation implements ServletActionInvocation {
 
         /* 代理的ActionInvocation */

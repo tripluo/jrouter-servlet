@@ -50,8 +50,8 @@ public class ServletResult {
      * @param invocation Action运行时上下文。
      *
      * @return 返回forward后的调用结果。
-     * 
-     * @see jrouter.result.DefaultResult#actionForward(jrouter.ActionInvocation) 
+     *
+     * @see jrouter.result.DefaultResult#actionForward(jrouter.ActionInvocation)
      */
     @ResultType(type = ACTION_FORWARD)
     public static Object actionForward(ServletActionInvocation invocation) {

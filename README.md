@@ -1,5 +1,5 @@
 
-**jrouter-servlet** 是一个基于[jrouter](https://github.com/innjj/jrouter)的Servlet组件；提供快速的路由定位、方法调用、参数绑定等功能。其核心设计目标即使代码少、小而精、轻量级、易扩展、Restful。
+**jrouter-servlet** 是一个基于[jrouter](https://github.com/innjj/jrouter)的Servlet组件；提供快速的路由定位、方法调用、参数绑定等功能。其核心设计目标即小而精、代码少、轻量级、易扩展、Restful。
 
 
 ### Maven: ###
@@ -8,7 +8,7 @@
 <dependency>
     <groupId>net.jrouter</groupId>
     <artifactId>jrouter-servlet</artifactId>
-    <version>1.7.1</version>
+    <version>1.7.2</version>
 </dependency>
 ```
 ### Web Filter配置: ###
@@ -20,7 +20,7 @@ Sample [web.xml](https://github.com/innjj/jrouter-home/blob/master/src/main/weba
     <filter-name>JRouter-Filter</filter-name>
     <filter-class>jrouter.servlet.filter.SpringBeanJRouterFilter</filter-class>
     <init-param>
-        <description>Character encoding (optional) (default:UTF-8)</description>
+        <description>Character encoding (optional)</description>
         <param-name>encoding</param-name>
         <param-value>UTF-8</param-value>
     </init-param>

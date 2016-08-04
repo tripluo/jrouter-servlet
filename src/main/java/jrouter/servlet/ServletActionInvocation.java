@@ -22,10 +22,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import jrouter.ActionInvocation;
+import jrouter.annotation.Dynamic;
 
 /**
  * 扩展ActionInvocation，返回HTTP Servlet常用参数的接口。
  */
+@Dynamic
 public interface ServletActionInvocation extends ActionInvocation {
 
     /**
