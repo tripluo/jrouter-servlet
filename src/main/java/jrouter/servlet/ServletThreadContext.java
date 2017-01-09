@@ -37,7 +37,7 @@ import jrouter.ActionInvocation;
 public class ServletThreadContext {
 
     /** Thread Safe */
-    private static final ThreadLocal<ServletThreadContext> threadLocal = new ThreadLocal<ServletThreadContext>() {
+    private static final ThreadLocal<ServletThreadContext> THREAD_LOCAL = new ThreadLocal<ServletThreadContext>() {
 
         @Override
         protected ServletThreadContext initialValue() {
@@ -82,7 +82,7 @@ public class ServletThreadContext {
      * @return 前线程副本中的ServletThreadContext。
      */
     private static ServletThreadContext get() {
-        return threadLocal.get();
+        return THREAD_LOCAL.get();
     }
 
     /**
@@ -96,7 +96,7 @@ public class ServletThreadContext {
         if ((map = getContextMap()) != null) {
             map.clear();
         }
-        threadLocal.remove();
+        THREAD_LOCAL.remove();
     }
 
     /**

@@ -29,12 +29,12 @@ import jrouter.JRouterException;
 import jrouter.ParameterConverter;
 import jrouter.annotation.Dynamic;
 import jrouter.annotation.Result;
-import jrouter.impl.DefaultActionFactory;
+import jrouter.impl.PathActionFactory;
 
 /**
  * ServletActionFactory invoke Action with Http parameters.
  */
-public interface ServletActionFactory extends ActionFactory {
+public interface ServletActionFactory extends ActionFactory<String> {
 
     /**
      * Use this instead of invokeAction(java.lang.String, java.lang.Object...) to pass Http parameters.
@@ -59,7 +59,7 @@ public interface ServletActionFactory extends ActionFactory {
      *
      * @see #createActionInvocation(java.lang.String, java.lang.Object...)
      */
-    public static class DefaultServletActionFactory extends DefaultActionFactory implements
+    public static class DefaultServletActionFactory extends PathActionFactory implements
             ServletActionFactory {
 
         /** Use ThreadLocal to store Http parameter object or not */
@@ -73,7 +73,7 @@ public interface ServletActionFactory extends ActionFactory {
          *
          * @param properties 指定的初始化数据键值映射。
          *
-         * @see DefaultActionFactory
+         * @see PathActionFactory
          */
         public DefaultServletActionFactory(Map<String, Object> properties) {
             super(properties);
@@ -98,9 +98,9 @@ public interface ServletActionFactory extends ActionFactory {
          * @see ServletActionInvocation
          */
         @Override
-        protected ActionInvocation<?> createActionInvocation(String path, Object... params) {
+        protected ActionInvocation<String> createActionInvocation(String path, Object... params) {
             //create no parameters ActionInvocation
-            ActionInvocation<?> invocation = super.createActionInvocation(path);
+            ActionInvocation invocation = super.createActionInvocation(path);
             DefaultServletActionInvocation servletInvocation = null;
 
             //优先从invokeAction参数中获取Http参数对象，已由invokeAction方法指定参数顺序
@@ -181,8 +181,8 @@ public interface ServletActionFactory extends ActionFactory {
     @Dynamic
     public static class DefaultServletActionInvocation implements ServletActionInvocation {
 
-        /* 代理的ActionInvocation */
-        private final ActionInvocation invocation;
+        /* 代理的PathActionInvocation */
+        private final ActionInvocation<String> invocation;
 
         /** Http request */
         private final HttpServletRequest request;
@@ -199,7 +199,7 @@ public interface ServletActionFactory extends ActionFactory {
         /** Store key-value */
         private final Map<String, Object> contextMap;
 
-        public DefaultServletActionInvocation(ActionInvocation invocation,
+        public DefaultServletActionInvocation(ActionInvocation<String> invocation,
                 HttpServletRequest request, HttpServletResponse response,
                 ServletContext servletContext, Map<String, Object> contextMap) {
             this.invocation = invocation;

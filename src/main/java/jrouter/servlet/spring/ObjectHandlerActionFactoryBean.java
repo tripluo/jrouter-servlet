@@ -49,8 +49,8 @@ public class ObjectHandlerActionFactoryBean extends DefaultActionFactoryBean<Obj
                             resultType, classType, defaultObjectResultType);
                 } else {
                     if (String.class == classType) {
-                        //String类型在DefaultActionFactory#invokeAction(...)中有做内置处理，除非有覆写此方法
-                        LOG.warn("Set [java.lang.String] type is usually invalid when using DefaultActionFactory or it's subtypes");
+                        //String类型在PathActionFactory#invokeAction(...)中有做内置处理，除非有覆写此方法
+                        LOG.warn("Set [java.lang.String] type is usually invalid when using PathActionFactory or it's subtypes");
                     }
                     LOG.info("Set ResultType [{}] for class [{}]", resultType, classType.getName());
                     _objectResultTypes.put(classType, type);
