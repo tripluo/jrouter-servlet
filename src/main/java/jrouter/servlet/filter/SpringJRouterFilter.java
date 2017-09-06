@@ -57,7 +57,7 @@ public class SpringJRouterFilter extends JRouterFilter {
      */
     @Override
     protected ActionFactory createActionFactory(final FilterConfig filterConfig) {
-        log.info("Load configuration location : " + configLocation);
+        log.info("Load configuration location : {}", configLocation);
         Configuration configuration = new Configuration();
         configuration.load(configLocation);
         if (useSpringObjectFactory) {

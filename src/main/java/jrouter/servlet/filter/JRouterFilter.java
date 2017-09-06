@@ -91,7 +91,7 @@ public class JRouterFilter implements Filter {
         //default true if not set
         if (_logNotFoundException != null)
             logNotFoundException = Boolean.parseBoolean(_logNotFoundException);
-        log.info("Set character encoding : " + encoding);
+        log.info("Set character encoding : {}", encoding);
         servletContext = filterConfig.getServletContext();
         try {
             if (useThreadLocal) {
@@ -103,7 +103,7 @@ public class JRouterFilter implements Filter {
 
             if (factoryName != null) {
                 servletContext.setAttribute(factoryName, actionFactory);
-                log.info("Set ActionFactory's name in ServletContext : " + factoryName);
+                log.info("Set ActionFactory's name in ServletContext : {}", factoryName);
             }
             isServletActionFactory = (actionFactory instanceof ServletActionFactory);
         } finally {
@@ -120,7 +120,7 @@ public class JRouterFilter implements Filter {
      * @return ActionFactory对象。
      */
     protected ActionFactory createActionFactory(FilterConfig filterConfig) {
-        log.info("Load configuration location : " + configLocation);
+        log.info("Load configuration location : {}", configLocation);
         Configuration configuration = new Configuration();
         configuration.load(configLocation);
         return configuration.buildActionFactory();

@@ -15,6 +15,6 @@
  *
  */
 /**
- * jrouter for servlet。
+ * jrouter for servlet.
  */
 package jrouter.servlet;

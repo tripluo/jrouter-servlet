@@ -46,8 +46,10 @@ public class ObjectHandlerActionFactory extends ServletActionFactory.DefaultServ
 
     @Override
     protected Object invokeUndefinedResult(ActionInvocation invocation, String resInfo) {
-        LOG.debug("Invoking undefined String Result [{}] at {}, use defaultObjectHandler [{}] ",
-                resInfo, invocation.getActionProxy().getMethodInfo(), defaultObjectHandler);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Invoking undefined String Result [{}] at {}, use defaultObjectHandler [{}] ",
+                    resInfo, invocation.getActionProxy().getMethodInfo(), defaultObjectHandler);
+        }
         return MethodUtil.invoke(defaultObjectHandler, invocation);
     }
 

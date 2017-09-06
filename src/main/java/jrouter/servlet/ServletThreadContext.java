@@ -62,7 +62,7 @@ public class ServletThreadContext {
     private ServletContext servletContext;
 
     /** Store key-value */
-    private final Map<String, Object> contextMap;
+    private final Map<String, ?> contextMap;
 
     /** Exception */
     private Exception exception;
@@ -209,8 +209,8 @@ public class ServletThreadContext {
      *
      * @return the context map。
      */
-    public static Map<String, Object> getContextMap() {
-        return get().contextMap;
+    public static <T> Map<String, T> getContextMap() {
+        return (Map) get().contextMap;
     }
 
     /**

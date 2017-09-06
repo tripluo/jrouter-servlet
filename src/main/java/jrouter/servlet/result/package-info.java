@@ -15,6 +15,6 @@
  *
  */
 /**
- * jrouter servlet result。
+ * jrouter servlet result.
  */
 package jrouter.servlet.result;

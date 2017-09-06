@@ -35,7 +35,7 @@ public class SpringBeanJRouterFilter extends SpringJRouterFilter {
     public void init(FilterConfig filterConfig) {
         beanName = filterConfig.getInitParameter("beanName");
         if (beanName != null)
-            log.info("Set bean's name of springframework : " + beanName);
+            log.info("Set bean's name of springframework : {}", beanName);
         super.init(filterConfig);
     }
 

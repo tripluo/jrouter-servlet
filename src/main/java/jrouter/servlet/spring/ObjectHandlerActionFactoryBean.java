@@ -37,7 +37,7 @@ public class ObjectHandlerActionFactoryBean extends DefaultActionFactoryBean<Obj
         if (defaultObjectHandler == null) {
             throw new IllegalArgumentException("Can't find ResultType : " + defaultObjectResultType);
         }
-        LOG.info("Set defaultObjectResultType : " + defaultObjectResultType);
+        LOG.info("Set defaultObjectResultType : {}", defaultObjectResultType);
         Map<Class, ResultTypeProxy> _objectResultTypes = new HashMap<Class, ResultTypeProxy>(2);
         if (objectResultTypes != null && !objectResultTypes.isEmpty()) {
             for (Map.Entry<Class, String> e : objectResultTypes.entrySet()) {

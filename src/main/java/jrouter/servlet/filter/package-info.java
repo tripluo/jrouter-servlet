@@ -15,6 +15,6 @@
  *
  */
 /**
- * jrouter web filter。
+ * jrouter web filter.
  */
 package jrouter.servlet.filter;
