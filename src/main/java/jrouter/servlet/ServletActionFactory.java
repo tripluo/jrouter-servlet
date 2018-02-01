@@ -37,7 +37,7 @@ import jrouter.impl.PathActionFactory;
 public interface ServletActionFactory extends ActionFactory<String> {
 
     /**
-     * Use this instead of invokeAction(java.lang.String, java.lang.Object...) to pass Http parameters.
+     * Use this instead of {@link #invokeAction(java.lang.Object, java.lang.Object...)} to pass Http parameters.
      *
      * @param <T> Generic type.
      * @param path Action path.
@@ -55,11 +55,11 @@ public interface ServletActionFactory extends ActionFactory<String> {
             ServletContext servletContext) throws JRouterException;
 
     /**
-     * 提供ServletActionFactory接口默认实现。覆写createActionInvocation方法创建ServletActionInvocation接口对象。
+     * 提供{@code ServletActionFactory}接口默认实现。覆写{@link #createActionInvocation}方法创建{@code ServletActionFactory}接口对象。
      *
      * @see #createActionInvocation(java.lang.String, java.lang.Object...)
      */
-    public static class DefaultServletActionFactory extends PathActionFactory implements
+    public static class DefaultServletActionFactory extends PathActionFactory.ColonString implements
             ServletActionFactory {
 
         /** Use ThreadLocal to store Http parameter object or not */
@@ -69,7 +69,7 @@ public interface ServletActionFactory extends ActionFactory<String> {
         private boolean actionPathCaseSensitive = true;
 
         /**
-         * 根据指定的键值映射构造初始化数据的ServletActionFactory对象。
+         * 根据指定的键值映射构造初始化数据的{@code ServletActionFactory}对象。
          *
          * @param properties 指定的初始化数据键值映射。
          *
@@ -83,19 +83,17 @@ public interface ServletActionFactory extends ActionFactory<String> {
         }
 
         @Override
-        public <T> T invokeAction(String path, HttpServletRequest request,
-                HttpServletResponse response, ServletContext sc) throws JRouterException {
+        public <T> T invokeAction(String path, HttpServletRequest request, HttpServletResponse response,
+                ServletContext sc) throws JRouterException {
             //invoke and pass http parameters
             return (T) super.invokeAction(actionPathCaseSensitive ? path : path.toLowerCase(),
                     request, response, sc);
         }
 
         /**
-         * 创建并返回ServletActionInvocation接口对象。
+         * 创建并返回{@link ServletActionInvocation}接口对象。
          *
-         * @return ServletActionInvocation接口对象。
-         *
-         * @see ServletActionInvocation
+         * @return {@link ServletActionInvocation}接口对象。
          */
         @Override
         protected ActionInvocation<String> createActionInvocation(String path, Object... params) {
@@ -149,9 +147,9 @@ public interface ServletActionFactory extends ActionFactory<String> {
         }
 
         /**
-         * 检测invokeAction方法传递过来参数的正确性。
+         * 检测{@link #invokeAction}方法传递过来参数的正确性。
          *
-         * @param params 由invokeAction方法传递过来参数。
+         * @param params 由{@link #invokeAction}方法传递过来参数。
          *
          * @return 参数是否为正确的Http Servlet对象。
          *
@@ -176,12 +174,12 @@ public interface ServletActionFactory extends ActionFactory<String> {
     }
 
     /**
-     * 扩展ActionInvocation，提供获取Http参数对象，并提供给参数转换器。
+     * 扩展{@code ActionInvocation}，提供获取Http参数对象，并提供给参数转换器。
      */
     @Dynamic
     public static class DefaultServletActionInvocation implements ServletActionInvocation {
 
-        /* 代理的PathActionInvocation */
+        /* 代理的ActionInvocation */
         private final ActionInvocation<String> invocation;
 
         /** Http request */
@@ -199,9 +197,8 @@ public interface ServletActionFactory extends ActionFactory<String> {
         /** Store key-value */
         private final Map<String, Object> contextMap;
 
-        public DefaultServletActionInvocation(ActionInvocation<String> invocation,
-                HttpServletRequest request, HttpServletResponse response,
-                ServletContext servletContext, Map<String, Object> contextMap) {
+        public DefaultServletActionInvocation(ActionInvocation<String> invocation, HttpServletRequest request,
+                HttpServletResponse response, ServletContext servletContext, Map<String, Object> contextMap) {
             this.invocation = invocation;
             this.request = request;
             this.requestMap = new RequestMap(request);

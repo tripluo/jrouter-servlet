@@ -16,8 +16,12 @@ public class ObjectHandlerActionFactory extends ServletActionFactory.DefaultServ
     /** 日志 */
     private static final Logger LOG = LoggerFactory.getLogger(ObjectHandlerActionFactory.class);
 
-    /* default object handler */
-    private ResultTypeProxy defaultObjectHandler;
+    /**
+     * Object class to ResultType mapping.
+     *
+     * 完全类型匹配，不考虑父子类继承等。
+     */
+    private Map<Class, ResultTypeProxy> objectResultTypes;
 
     /**
      * 根据指定的键值映射构造初始化数据的ObjectHandlerActionFactory对象。
@@ -28,41 +32,14 @@ public class ObjectHandlerActionFactory extends ServletActionFactory.DefaultServ
         super(properties);
     }
 
-    /**
-     * Object class to ResultType mapping.
-     *
-     * 完全类型匹配，不考虑父子类继承等。
-     */
-    private Map<Class, ResultTypeProxy> objectResultTypes;
-
     @Override
-    protected Object invokeObjectResult(ActionInvocation invocation, Object res) {
+    protected Object invokeResult(ActionInvocation invocation, Object res) {
         ResultTypeProxy resultType = null;
+        //优先根据结果对象的类型获取处理类型
         if (res != null && (resultType = objectResultTypes.get(res.getClass())) != null) {
             return MethodUtil.invoke(resultType, invocation);
         }
-        return MethodUtil.invoke(defaultObjectHandler, invocation);
-    }
-
-    @Override
-    protected Object invokeUndefinedResult(ActionInvocation invocation, String resInfo) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Invoking undefined String Result [{}] at {}, use defaultObjectHandler [{}] ",
-                    resInfo, invocation.getActionProxy().getMethodInfo(), defaultObjectHandler);
-        }
-        return MethodUtil.invoke(defaultObjectHandler, invocation);
-    }
-
-    /**
-     * 设置默认非{@code String}类型对象的结果类型处理对象。
-     * 注意即使设置了{@code String}类型的对象也并不会调用invokeObjectResult方法。
-     *
-     * @see #invokeObjectResult(jrouter.ActionInvocation, java.lang.Object)
-     *
-     * @param defaultObjectHandler 非{@code String}对象的结果类型处理对象。
-     */
-    public void setDefaultObjectHandler(ResultTypeProxy defaultObjectHandler) {
-        this.defaultObjectHandler = defaultObjectHandler;
+        return super.invokeResult(invocation, res);
     }
 
     /**

@@ -5,7 +5,7 @@
     <groupId>net.jrouter</groupId>
     <artifactId>jrouter-servlet</artifactId>
     <packaging>jar</packaging>
-    <version>1.7.4</version>
+    <version>1.7.5</version>
     <name>JRouter-servlet</name>
     <url>https://github.com/innjj/jrouter-servlet</url>
     <dependencies>
@@ -13,7 +13,7 @@
         <dependency>
             <groupId>net.jrouter</groupId>
             <artifactId>jrouter</artifactId>
-            <version>1.7.4</version>
+            <version>1.7.5</version>
         </dependency>
 
         <!-- logback -->
@@ -42,26 +42,32 @@
             <version>1.7.25</version>
             <optional>true</optional>
         </dependency>
-
+        <!-- lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.18</version>
+            <scope>provided</scope>
+        </dependency>
         <!-- servlet/jsp -->
         <dependency>
             <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.5</version>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>javax.servlet.jsp</groupId>
-            <artifactId>jsp-api</artifactId>
-            <version>2.1</version>
+            <artifactId>javax.servlet.jsp-api</artifactId>
+            <version>2.3.2-b02</version>
             <scope>provided</scope>
         </dependency>
 
-        <!-- junit -->
+        <!-- testng -->
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>6.13.1</version>
             <scope>test</scope>
         </dependency>
         <!-- spring test -->
@@ -78,10 +84,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.6.2</version>
+                <version>3.7.0</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                     <encoding>${project.build.sourceEncoding}</encoding>
                     <showDeprecation>true</showDeprecation>
                 </configuration>
@@ -140,7 +146,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>2.10.4</version>
+                        <version>3.0.0</version>
                         <executions>
                             <execution>
                                 <phase>package</phase>
@@ -176,7 +182,7 @@
     </profiles>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.version>4.3.10.RELEASE</spring.version>
+        <spring.version>4.3.14.RELEASE</spring.version>
     </properties>
     <licenses>
         <license>

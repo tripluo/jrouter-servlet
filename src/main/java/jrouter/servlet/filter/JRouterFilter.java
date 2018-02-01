@@ -127,8 +127,8 @@ public class JRouterFilter implements Filter {
     }
 
     @Override
-    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws
-            IOException, ServletException {
+    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException,
+            ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
         if (encoding != null) {
@@ -183,8 +183,7 @@ public class JRouterFilter implements Filter {
      * @param request HttpServletRequest.
      * @param response HttpServletResponse.
      */
-    protected void createServletThreadContext(HttpServletRequest request,
-            HttpServletResponse response) {
+    protected void createServletThreadContext(HttpServletRequest request, HttpServletResponse response) {
         ServletThreadContext.setRequest(request);
         ServletThreadContext.setResponse(response);
     }

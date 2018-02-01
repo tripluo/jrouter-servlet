@@ -25,7 +25,7 @@ import jrouter.ActionInvocation;
 import jrouter.annotation.Dynamic;
 
 /**
- * 扩展ActionInvocation，返回HTTP Servlet常用参数的接口。
+ * 扩展{@code ActionInvocation<String>}，返回HTTP Servlet常用参数的接口。
  */
 @Dynamic
 public interface ServletActionInvocation extends ActionInvocation<String> {

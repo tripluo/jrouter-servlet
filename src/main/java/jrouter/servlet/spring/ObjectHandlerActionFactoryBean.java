@@ -18,9 +18,6 @@ public class ObjectHandlerActionFactoryBean extends DefaultActionFactoryBean<Obj
     /** 日志 */
     private static final Logger LOG = LoggerFactory.getLogger(ObjectHandlerActionFactoryBean.class);
 
-    /* default result type */
-    private String defaultObjectResultType;
-
     /* object class to ResultType mapping */
     private Map<Class, String> objectResultTypes;
 
@@ -33,12 +30,7 @@ public class ObjectHandlerActionFactoryBean extends DefaultActionFactoryBean<Obj
     @Override
     protected void afterActionFactoryCreation(ObjectHandlerActionFactory actionFactory) {
         super.afterActionFactoryCreation(actionFactory);
-        ResultTypeProxy defaultObjectHandler = actionFactory.getResultTypes().get(defaultObjectResultType);
-        if (defaultObjectHandler == null) {
-            throw new IllegalArgumentException("Can't find ResultType : " + defaultObjectResultType);
-        }
-        LOG.info("Set defaultObjectResultType : {}", defaultObjectResultType);
-        Map<Class, ResultTypeProxy> _objectResultTypes = new HashMap<Class, ResultTypeProxy>(2);
+        Map<Class, ResultTypeProxy> _objectResultTypes = new HashMap<>(2);
         if (objectResultTypes != null && !objectResultTypes.isEmpty()) {
             for (Map.Entry<Class, String> e : objectResultTypes.entrySet()) {
                 Class classType = e.getKey();
@@ -46,7 +38,7 @@ public class ObjectHandlerActionFactoryBean extends DefaultActionFactoryBean<Obj
                 ResultTypeProxy type = actionFactory.getResultTypes().get(resultType);
                 if (type == null) {
                     LOG.info("Can't find ResultType [{}] for [{}], use default [{}]",
-                            resultType, classType, defaultObjectResultType);
+                            resultType, classType, actionFactory.getDefaultResultType());
                 } else {
                     if (String.class == classType) {
                         //String类型在PathActionFactory#invokeAction(...)中有做内置处理，除非有覆写此方法
@@ -57,20 +49,9 @@ public class ObjectHandlerActionFactoryBean extends DefaultActionFactoryBean<Obj
                 }
             }
         }
-        actionFactory.setDefaultObjectHandler(defaultObjectHandler);
         //use unmodifiable Map to avoid multi threading problem
         actionFactory.setObjectResultTypes(Collections.unmodifiableMap(_objectResultTypes));
 
-    }
-
-    /**
-     *
-     * 设置默认非{@code String}类型对象的结果类型处理对象。
-     *
-     * @param defaultObjectResultType 非{@code String}对象的结果类型处理对象。
-     */
-    public void setDefaultObjectResultType(String defaultObjectResultType) {
-        this.defaultObjectResultType = defaultObjectResultType;
     }
 
     /**

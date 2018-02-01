@@ -62,8 +62,7 @@ public class ServletResult {
      * @see javax.servlet.RequestDispatcher#forward(javax.servlet.ServletRequest, javax.servlet.ServletResponse)
      */
     @ResultType(type = FORWARD)
-    public static void forward(ServletActionInvocation invocation) throws IOException,
-            ServletException {
+    public static void forward(ServletActionInvocation invocation) throws IOException, ServletException {
         HttpServletResponse response = invocation.getResponse();
         if (response.isCommitted())
             return;

@@ -43,7 +43,7 @@ public class RequestMap extends AbstractMap<String, String[]> implements Seriali
      * @param request the http servlet request.
      */
     public RequestMap(final HttpServletRequest request) {
-        parameters = new HashMap<String, String[]>(request.getParameterMap());
+        parameters = new HashMap<>(request.getParameterMap());
     }
 
     /**

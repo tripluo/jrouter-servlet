@@ -61,7 +61,7 @@ public class SpringJRouterFilter extends JRouterFilter {
         Configuration configuration = new Configuration();
         configuration.load(configLocation);
         if (useSpringObjectFactory) {
-            Map<String, Object> actionFactoryProperties = new HashMap<String, Object>(2);
+            Map<String, Object> actionFactoryProperties = new HashMap<>(2);
             actionFactoryProperties.put("objectFactory",
                     new SpringObjectFactory(WebApplicationContextUtils.getRequiredWebApplicationContext(filterConfig.getServletContext())));
             configuration.addActionFactoryProperties(actionFactoryProperties);

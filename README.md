@@ -8,7 +8,7 @@
 <dependency>
     <groupId>net.jrouter</groupId>
     <artifactId>jrouter-servlet</artifactId>
-    <version>1.7.4</version>
+    <version>1.7.5</version>
 </dependency>
 ```
 ### Web Filter配置: ###
@@ -19,6 +19,11 @@ Sample [web.xml](https://github.com/innjj/jrouter-home/blob/master/src/main/weba
 <filter>
     <filter-name>JRouter-Filter</filter-name>
     <filter-class>jrouter.servlet.filter.SpringBeanJRouterFilter</filter-class>
+    <init-param>
+        <description>ActionFactory's bean name</description>
+        <param-name>beanName</param-name>
+        <param-value>servletActionFactory</param-value>
+    </init-param>
     <init-param>
         <description>Character encoding (optional)</description>
         <param-name>encoding</param-name>
@@ -32,7 +37,7 @@ Sample [web.xml](https://github.com/innjj/jrouter-home/blob/master/src/main/weba
     <init-param>
         <description>ActionFactory's name in ServletContext (optional)</description>
         <param-name>factoryName</param-name>
-        <param-value>jrouter_factory</param-value>
+        <param-value>servletActionFactory</param-value>
     </init-param>
     <init-param>
         <description>log NotFoundException (default:true)</description>
@@ -47,8 +52,8 @@ Sample [spring.xml](https://github.com/innjj/jrouter-home/blob/master/src/main/r
 
 ```xml
 <!-- JRouter ActionFactory -->
-<bean id="actionFactory" class="jrouter.servlet.spring.ObjectHandlerActionFactoryBean">
-    <property name="defaultObjectResultType" value="freemarker" />
+<bean id="servletActionFactory" class="jrouter.servlet.spring.ObjectHandlerActionFactoryBean">
+    <!-- deprecated since 1.7.5 <property name="defaultObjectResultType" value="freemarker" />-->
     <property name="actionFactoryProperties">
         <util:properties location="classpath:jrouterActionFactory.properties" />
     </property>

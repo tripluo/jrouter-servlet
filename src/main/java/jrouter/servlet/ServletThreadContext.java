@@ -152,6 +152,11 @@ public class ServletThreadContext {
     /**
      * Gets the HTTP servlet session object.
      *
+     * @param create <code>true</code> to create
+     * a new session for this request if necessary;
+     * <code>false</code> to return <code>null</code>
+     * if there's no current session
+     *
      * @return the HTTP servlet session object.
      */
     public static HttpSession getSession(boolean create) {
