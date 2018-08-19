@@ -8,9 +8,60 @@
 <dependency>
     <groupId>net.jrouter</groupId>
     <artifactId>jrouter-servlet</artifactId>
-    <version>1.7.5</version>
+    <version>1.7.6</version>
 </dependency>
 ```
+
+###  JavaConfig: ###
+```
+import javax.servlet.DispatcherType;
+import jrouter.ActionFactory;
+import jrouter.servlet.ObjectHandlerActionFactory;
+import jrouter.servlet.filter.SpringBeanJRouterFilter;
+import jrouter.spring.SpringObjectFactory;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
+...
+    @Bean
+    ActionFactory<String> actionFactory(ApplicationContext applicationContext) {
+        ObjectHandlerActionFactory.Properties properties = new ObjectHandlerActionFactory.Properties();
+        properties.setActionPathCaseSensitive(false);
+        properties.setExtension(".");
+        properties.setDefaultResultType("fastjson");
+        properties.setDefaultInterceptorStack(net.jrouter.home.interceptor.DefaultInterceptorStack.DEFAULT);
+        properties.setObjectFactory(new SpringObjectFactory(applicationContext));
+        ObjectHandlerActionFactory actionFactory = new ObjectHandlerActionFactory(properties);
+
+        actionFactory.addInterceptors(net.jrouter.home.interceptor.TimerInterceptor.class);
+        actionFactory.addInterceptors(net.jrouter.home.interceptor.ExceptionInterceptor.class);
+
+        actionFactory.addInterceptorStacks(net.jrouter.home.interceptor.DefaultInterceptorStack.class);
+
+        actionFactory.addResultTypes(jrouter.servlet.result.ServletResult.class);
+        actionFactory.addResultTypes(...);
+
+        actionFactory.addActions(net.jrouter.home.action.HomeAction.class);
+        ...
+        return actionFactory;
+    }
+
+    @Bean
+    public FilterRegistrationBean actionFactoryFilterRegistration() {
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        SpringBeanJRouterFilter actionFactoryFilter = new SpringBeanJRouterFilter();
+        actionFactoryFilter.setEncoding("UTF-8");
+        actionFactoryFilter.setFactoryName("jrouter_factory");
+        actionFactoryFilter.setLogNotFoundException(false);
+        actionFactoryFilter.setTrimRequestParameter(true);
+        actionFactoryFilter.setUseThreadLocal(true);
+        registration.addUrlPatterns("*.jj");
+        registration.setFilter(actionFactoryFilter);
+        registration.setDispatcherTypes(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.INCLUDE);
+        return registration;
+    }
+```
+
 ### Web Filter配置: ###
 
 Sample [web.xml](https://github.com/innjj/jrouter-home/blob/master/src/main/webapp/WEB-INF/web.xml) of project [jrouter-home](https://github.com/innjj/jrouter-home)

@@ -29,12 +29,12 @@ import jrouter.ActionInvocation;
  * ServletThreadContext包含一个{@link ActionInvocation}，存储线程安全的Action运行时上下文。
  * ServletThreadContext包含http的相关的变量。
  * ServletThreadContext包含一个contextMap变量，存储自定义的key-value。
- * ServletThreadContext包含一个Exception对象，存储发生的异常。
+ * ServletThreadContext包含一个{@code Exception}对象，存储发生的异常。
  *
  * @see ServletActionFactory.DefaultServletActionFactory
  * @see ServletActionFactory.DefaultServletActionInvocation
  */
-public class ServletThreadContext {
+public final class ServletThreadContext {
 
     /** Thread Safe */
     private static final ThreadLocal<ServletThreadContext> THREAD_LOCAL = new ThreadLocal<ServletThreadContext>() {

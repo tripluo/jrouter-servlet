@@ -1,5 +1,6 @@
 package jrouter.servlet;
 
+import java.util.Collections;
 import java.util.Map;
 import jrouter.ActionInvocation;
 import jrouter.impl.ResultTypeProxy;
@@ -21,14 +22,15 @@ public class ObjectHandlerActionFactory extends ServletActionFactory.DefaultServ
      *
      * 完全类型匹配，不考虑父子类继承等。
      */
-    private Map<Class, ResultTypeProxy> objectResultTypes;
+    @lombok.Setter
+    private Map<Class, ResultTypeProxy> objectResultTypes = Collections.EMPTY_MAP;
 
     /**
-     * 根据指定的键值映射构造初始化数据的ObjectHandlerActionFactory对象。
+     * Constructor.
      *
-     * @param properties 指定的初始化数据键值映射。
+     * @param properties Properties
      */
-    public ObjectHandlerActionFactory(Map<String, Object> properties) {
+    public ObjectHandlerActionFactory(Properties properties) {
         super(properties);
     }
 
@@ -40,15 +42,6 @@ public class ObjectHandlerActionFactory extends ServletActionFactory.DefaultServ
             return MethodUtil.invoke(resultType, invocation);
         }
         return super.invokeResult(invocation, res);
-    }
-
-    /**
-     * 设置(结果对象的类型:结果类型对象)的映射关系。
-     *
-     * @param objectResultTypes (结果对象的类型:结果类型对象)的映射关系。
-     */
-    public void setObjectResultTypes(Map<Class, ResultTypeProxy> objectResultTypes) {
-        this.objectResultTypes = objectResultTypes;
     }
 
 }

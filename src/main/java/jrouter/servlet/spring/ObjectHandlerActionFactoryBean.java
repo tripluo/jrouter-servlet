@@ -3,34 +3,49 @@ package jrouter.servlet.spring;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import jrouter.config.Configuration;
 import jrouter.impl.ResultTypeProxy;
 import jrouter.servlet.ObjectHandlerActionFactory;
-import jrouter.spring.DefaultActionFactoryBean;
+import jrouter.servlet.ServletActionFactory.DefaultServletActionFactory;
+import jrouter.spring.SpringObjectFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 /**
- * 提供与springframework集成的ObjectHandlerActionFactory对象。
+ * 提供与springframework集成的{@code ObjectHandlerActionFactory}对象。
  */
-public class ObjectHandlerActionFactoryBean extends DefaultActionFactoryBean<ObjectHandlerActionFactory> {
+public class ObjectHandlerActionFactoryBean implements FactoryBean<ObjectHandlerActionFactory>, InitializingBean,
+        DisposableBean, ApplicationContextAware {
 
     /** 日志 */
     private static final Logger LOG = LoggerFactory.getLogger(ObjectHandlerActionFactoryBean.class);
 
+    /** ApplicationContext */
+    private ApplicationContext applicationContext;
+
     /* object class to ResultType mapping */
-    private Map<Class, String> objectResultTypes;
+    @lombok.Setter
+    private Map<Class, String> objectResultTypes = Collections.EMPTY_MAP;
+
+    @lombok.Setter
+    private DefaultServletActionFactory.Properties properties = null;
+
+    /* ActionFactory对象 */
+    private ObjectHandlerActionFactory actionFactory;
 
     @Override
-    protected void setDefaultActionFactoryClass(Configuration config) {
-        //default use ObjectHandlerActionFactory
-        config.setActionFactoryClass(ObjectHandlerActionFactory.class);
-    }
-
-    @Override
-    protected void afterActionFactoryCreation(ObjectHandlerActionFactory actionFactory) {
-        super.afterActionFactoryCreation(actionFactory);
-        Map<Class, ResultTypeProxy> _objectResultTypes = new HashMap<>(2);
+    public void afterPropertiesSet() throws Exception {
+        if (properties == null) {
+            properties = new DefaultServletActionFactory.Properties();
+            properties.setObjectFactory(new SpringObjectFactory(applicationContext));
+        }
+        actionFactory = new ObjectHandlerActionFactory(properties);
+        Map<Class, ResultTypeProxy> tmpObjectResultTypes = new HashMap<>(2);
         if (objectResultTypes != null && !objectResultTypes.isEmpty()) {
             for (Map.Entry<Class, String> e : objectResultTypes.entrySet()) {
                 Class classType = e.getKey();
@@ -45,21 +60,40 @@ public class ObjectHandlerActionFactoryBean extends DefaultActionFactoryBean<Obj
                         LOG.warn("Set [java.lang.String] type is usually invalid when using PathActionFactory or it's subtypes");
                     }
                     LOG.info("Set ResultType [{}] for class [{}]", resultType, classType.getName());
-                    _objectResultTypes.put(classType, type);
+                    tmpObjectResultTypes.put(classType, type);
                 }
             }
         }
         //use unmodifiable Map to avoid multi threading problem
-        actionFactory.setObjectResultTypes(Collections.unmodifiableMap(_objectResultTypes));
+        actionFactory.setObjectResultTypes(Collections.unmodifiableMap(tmpObjectResultTypes));
 
     }
 
-    /**
-     * 设置(结果对象类型:结果类型对象)的映射关系。
-     *
-     * @param objectResultTypes (结果对象的类型:结果类型对象)的映射关系。
-     */
-    public void setObjectResultTypes(Map<Class, String> objectResultTypes) {
-        this.objectResultTypes = objectResultTypes;
+    @Override
+    public ObjectHandlerActionFactory getObject() throws Exception {
+        return actionFactory;
     }
+
+    @Override
+    public Class<?> getObjectType() {
+        return actionFactory.getClass();
+    }
+
+    @Override
+    public boolean isSingleton() {
+        return true;
+    }
+
+    @Override
+    public void destroy() throws Exception {
+        if (actionFactory != null) {
+            this.actionFactory.clear();
+        }
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
+
 }

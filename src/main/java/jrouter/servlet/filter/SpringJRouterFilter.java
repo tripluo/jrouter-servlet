@@ -22,6 +22,7 @@ import javax.servlet.FilterConfig;
 import jrouter.ActionFactory;
 import jrouter.config.Configuration;
 import jrouter.spring.SpringObjectFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
@@ -32,34 +33,31 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  * @see jrouter.spring.SpringObjectFactory
  * @see jrouter.config.Configuration
  */
+@Slf4j
 public class SpringJRouterFilter extends JRouterFilter {
 
     /**
      * 默认使用springframework工厂创建新的对象实例。
      */
+    @lombok.Getter
+    @lombok.Setter
     private boolean useSpringObjectFactory = true;
 
     @Override
     public void init(FilterConfig filterConfig) {
         String useSpring = filterConfig.getInitParameter("useSpringObjectFactory");
         //default true if not set
-        if (useSpring != null)
+        if (useSpring != null) {
             useSpringObjectFactory = Boolean.parseBoolean(useSpring);
+        }
         super.init(filterConfig);
     }
 
-    /**
-     * A hook to give subclass another way to create ActionFactory。
-     *
-     * @param filterConfig 过滤器配置。
-     *
-     * @return ActionFactory bean.
-     */
     @Override
     protected ActionFactory createActionFactory(final FilterConfig filterConfig) {
-        log.info("Load configuration location : {}", configLocation);
+        log.info("Load configuration location : {}", getConfigLocation());
         Configuration configuration = new Configuration();
-        configuration.load(configLocation);
+        configuration.load(getConfigLocation());
         if (useSpringObjectFactory) {
             Map<String, Object> actionFactoryProperties = new HashMap<>(2);
             actionFactoryProperties.put("objectFactory",

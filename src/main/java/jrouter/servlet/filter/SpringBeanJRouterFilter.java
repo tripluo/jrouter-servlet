@@ -18,34 +18,33 @@ package jrouter.servlet.filter;
 
 import javax.servlet.FilterConfig;
 import jrouter.ActionFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
  * ActionFactory对象引自springframework中的bean实例对象。
  * 由ActionFactory类型或已知的bean名称指定已存在于spring容器中的ActionFactory对象，因而必须首先加载spring容器。
  */
-public class SpringBeanJRouterFilter extends SpringJRouterFilter {
+@Slf4j
+public class SpringBeanJRouterFilter extends AbstractJRouterFilter {
 
     /**
      * ActionFactory于springframework中bean的名称。
      */
+    @lombok.Getter
+    @lombok.Setter
     private String beanName;
 
     @Override
     public void init(FilterConfig filterConfig) {
-        beanName = filterConfig.getInitParameter("beanName");
-        if (beanName != null)
+        String varBeanName = filterConfig.getInitParameter("beanName");
+        if (varBeanName != null) {
+            this.beanName = varBeanName;
             log.info("Set bean's name of springframework : {}", beanName);
+        }
         super.init(filterConfig);
     }
 
-    /**
-     * 设置ActionFactory为spring中指定的bean。
-     *
-     * @param filterConfig 过滤器配置。
-     *
-     * @return ActionFactory bean.
-     */
     @Override
     protected ActionFactory createActionFactory(FilterConfig filterConfig) {
         //set ActionFactory with spring bean

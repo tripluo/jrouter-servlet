@@ -64,17 +64,17 @@ public class ServletResult {
     @ResultType(type = FORWARD)
     public static void forward(ServletActionInvocation invocation) throws IOException, ServletException {
         HttpServletResponse response = invocation.getResponse();
-        if (response.isCommitted())
+        if (response.isCommitted()) {
             return;
-
+        }
         String location = invocation.getResult().location();
         if (location.charAt(0) != '/') {
-            location = '/' + location;
+            location = '/' + location;  //NOPMD
         }
 
         HttpServletRequest request = invocation.getRequest();
         if (request.getContextPath() != null && request.getContextPath().length() > 0) {
-            location = request.getContextPath() + location;
+            location = request.getContextPath() + location; //NOPMD
         }
         request.getRequestDispatcher(location).forward(request, response);
     }
@@ -85,17 +85,17 @@ public class ServletResult {
     @ResultType(type = REDIRECT)
     public static void redirect(ServletActionInvocation invocation) throws IOException {
         HttpServletResponse response = invocation.getResponse();
-        if (response.isCommitted())
+        if (response.isCommitted()) {
             return;
-
+        }
         String location = invocation.getResult().location();
         if (location.charAt(0) != '/') {
-            location = '/' + location;
+            location = '/' + location; //NOPMD
         }
 
         HttpServletRequest request = invocation.getRequest();
         if (request.getContextPath() != null && request.getContextPath().length() > 0) {
-            location = request.getContextPath() + location;
+            location = request.getContextPath() + location; //NOPMD
         }
         response.sendRedirect(location);
     }

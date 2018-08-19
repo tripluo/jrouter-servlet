@@ -17,6 +17,7 @@
 package jrouter.servlet;
 
 import java.lang.reflect.Method;
+import java.util.Locale;
 import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -24,15 +25,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import jrouter.ActionFactory;
 import jrouter.ActionInvocation;
-import jrouter.ActionProxy;
 import jrouter.JRouterException;
-import jrouter.ParameterConverter;
 import jrouter.annotation.Dynamic;
-import jrouter.annotation.Result;
 import jrouter.impl.PathActionFactory;
+import jrouter.support.ActionInvocationDelegate;
 
 /**
- * ServletActionFactory invoke Action with Http parameters.
+ * {@code ServletActionFactory} invoke Action with Http parameters.
  */
 public interface ServletActionFactory extends ActionFactory<String> {
 
@@ -59,34 +58,43 @@ public interface ServletActionFactory extends ActionFactory<String> {
      *
      * @see #createActionInvocation(java.lang.String, java.lang.Object...)
      */
-    public static class DefaultServletActionFactory extends PathActionFactory.ColonString implements
-            ServletActionFactory {
+    class DefaultServletActionFactory extends PathActionFactory.ColonString implements ServletActionFactory {
 
         /** Use ThreadLocal to store Http parameter object or not */
         private final boolean useThreadLocal = true;
 
         /* Action path是否大小写敏感，默认区分大小写 **/
-        private boolean actionPathCaseSensitive = true;
+        private final boolean actionPathCaseSensitive;
 
         /**
-         * 根据指定的键值映射构造初始化数据的{@code ServletActionFactory}对象。
+         * Constructor.
          *
-         * @param properties 指定的初始化数据键值映射。
-         *
-         * @see PathActionFactory
+         * @param properties Properties
          */
-        public DefaultServletActionFactory(Map<String, Object> properties) {
+        public DefaultServletActionFactory(Properties properties) {
             super(properties);
-            Object val = properties.get("actionPathCaseSensitive");
-            if (val != null)
-                actionPathCaseSensitive = Boolean.valueOf(val.toString());
+            this.actionPathCaseSensitive = properties.actionPathCaseSensitive;
+        }
+
+        /**
+         * DefaultServletActionFactory 属性。
+         */
+        @lombok.Getter
+        @lombok.Setter
+        public static class Properties extends ColonString.Properties {
+
+            /**
+             * @see DefaultServletActionFactory#actionPathCaseSensitive
+             */
+            private boolean actionPathCaseSensitive = true;
+
         }
 
         @Override
         public <T> T invokeAction(String path, HttpServletRequest request, HttpServletResponse response,
                 ServletContext sc) throws JRouterException {
             //invoke and pass http parameters
-            return (T) super.invokeAction(actionPathCaseSensitive ? path : path.toLowerCase(),
+            return (T) super.invokeAction(actionPathCaseSensitive ? path : path.toLowerCase(Locale.getDefault()),
                     request, response, sc);
         }
 
@@ -143,7 +151,7 @@ public interface ServletActionFactory extends ActionFactory<String> {
         @Override
         protected String buildActionPath(String namespace, String aname, Method method) {
             String path = super.buildActionPath(namespace, aname, method);
-            return actionPathCaseSensitive ? path : path.toLowerCase();
+            return actionPathCaseSensitive ? path : path.toLowerCase(Locale.getDefault());
         }
 
         /**
@@ -177,10 +185,7 @@ public interface ServletActionFactory extends ActionFactory<String> {
      * 扩展{@code ActionInvocation}，提供获取Http参数对象，并提供给参数转换器。
      */
     @Dynamic
-    public static class DefaultServletActionInvocation implements ServletActionInvocation {
-
-        /* 代理的ActionInvocation */
-        private final ActionInvocation<String> invocation;
+    class DefaultServletActionInvocation extends ActionInvocationDelegate<String> implements ServletActionInvocation {
 
         /** Http request */
         private final HttpServletRequest request;
@@ -197,89 +202,15 @@ public interface ServletActionFactory extends ActionFactory<String> {
         /** Store key-value */
         private final Map<String, Object> contextMap;
 
-        public DefaultServletActionInvocation(ActionInvocation<String> invocation, HttpServletRequest request,
+        public DefaultServletActionInvocation(ActionInvocation<String> invocation, HttpServletRequest request, //NOPMD ExcessiveParameterList
                 HttpServletResponse response, ServletContext servletContext, Map<String, Object> contextMap) {
-            this.invocation = invocation;
+            super();
+            this.delegate = invocation;
             this.request = request;
             this.requestMap = new RequestMap(request);
             this.response = response;
             this.servletContext = servletContext;
             this.contextMap = contextMap;
-        }
-
-        @Override
-        public ActionFactory getActionFactory() {
-            return invocation.getActionFactory();
-        }
-
-        @Override
-        public ActionProxy getActionProxy() {
-            return invocation.getActionProxy();
-        }
-
-        @Override
-        public boolean isExecuted() {
-            return invocation.isExecuted();
-        }
-
-        @Override
-        public Object[] getParameters() {
-            return invocation.getParameters();
-        }
-
-        @Override
-        public Object invoke(Object... params) throws JRouterException {
-            return invocation.invoke(params);
-        }
-
-        @Override
-        public Object invokeActionOnly(Object... params) throws JRouterException {
-            return invocation.invokeActionOnly(params);
-        }
-
-        @Override
-        public String getActionPath() {
-            return invocation.getActionPath();
-        }
-
-        @Override
-        public Object getInvokeResult() {
-            return invocation.getInvokeResult();
-        }
-
-        @Override
-        public void setInvokeResult(Object result) {
-            invocation.setInvokeResult(result);
-        }
-
-        @Override
-        public void setResult(Result result) {
-            invocation.setResult(result);
-        }
-
-        @Override
-        public Result getResult() {
-            return invocation.getResult();
-        }
-
-        @Override
-        public void setParameterConverter(ParameterConverter parameterConverter) {
-            invocation.setParameterConverter(parameterConverter);
-        }
-
-        @Override
-        public ParameterConverter getParameterConverter() {
-            return invocation.getParameterConverter();
-        }
-
-        @Override
-        public void setConvertParameters(Object... params) {
-            invocation.setConvertParameters(params);
-        }
-
-        @Override
-        public Object[] getConvertParameters() {
-            return invocation.getConvertParameters();
         }
 
         @Override
@@ -311,6 +242,5 @@ public interface ServletActionFactory extends ActionFactory<String> {
         public Map<String, Object> getContextMap() {
             return contextMap;
         }
-
     }
 }
