@@ -15,6 +15,6 @@
  *
  */
 /**
- * 提供与 springframework 集成的类。
+ * jrouter for servlet.
  */
-package jrouter.servlet.spring;
+package net.jrouter.http.servlet;

@@ -14,7 +14,21 @@
  * limitations under the License.
  *
  */
+package net.jrouter.http;
+
+import net.jrouter.annotation.Namespace;
+
 /**
- * jrouter for servlet.
+ * DemoAction.
  */
-package jrouter.servlet;
+@Namespace(name = "/test", autoIncluded = true)
+public class DemoAction {
+
+    public String test100() {
+        return "/test100";
+    }
+
+    public String test200() {
+        return "/test200";
+    }
+}

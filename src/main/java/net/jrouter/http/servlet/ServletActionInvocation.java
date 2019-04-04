@@ -14,15 +14,15 @@
  * limitations under the License.
  *
  */
-package jrouter.servlet;
+package net.jrouter.http.servlet;
 
 import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import jrouter.ActionInvocation;
-import jrouter.annotation.Dynamic;
+import net.jrouter.ActionInvocation;
+import net.jrouter.annotation.Dynamic;
 
 /**
  * 扩展{@code ActionInvocation<String>}，返回HTTP Servlet常用参数的接口。

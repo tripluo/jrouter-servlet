@@ -14,16 +14,15 @@
  * limitations under the License.
  *
  */
-package jrouter.servlet;
+package net.jrouter.http.servlet;
 
 import java.io.Serializable;
 import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
-import jrouter.annotation.Dynamic;
+import net.jrouter.annotation.Dynamic;
 
 /**
  * A simple implementation of the {@link java.util.Map} interface to handle a collection of request

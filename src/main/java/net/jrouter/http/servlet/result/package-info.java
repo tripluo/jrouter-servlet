@@ -17,4 +17,4 @@
 /**
  * jrouter servlet result.
  */
-package jrouter.servlet.result;
+package net.jrouter.http.servlet.result;

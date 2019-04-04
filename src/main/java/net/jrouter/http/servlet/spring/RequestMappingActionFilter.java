@@ -14,18 +14,14 @@
  * limitations under the License.
  *
  */
-package jrouter.servlet.spring;
+package net.jrouter.http.servlet.spring;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import jrouter.ActionFilter;
-import jrouter.annotation.Action;
-import jrouter.annotation.Namespace;
-import jrouter.annotation.Parameter;
-import jrouter.annotation.Result;
-import jrouter.annotation.Scope;
-import jrouter.util.CollectionUtil;
-import jrouter.util.StringUtil;
+import net.jrouter.ActionFilter;
+import net.jrouter.annotation.*;
+import net.jrouter.util.CollectionUtil;
+import net.jrouter.util.StringUtil;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -63,6 +59,7 @@ public class RequestMappingActionFilter implements ActionFilter {
 
             final String[] paths = values;
             return new Action() {
+
                 @Override
                 public String[] value() {
                     return paths;

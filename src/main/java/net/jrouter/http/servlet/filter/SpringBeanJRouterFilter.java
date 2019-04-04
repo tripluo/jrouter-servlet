@@ -14,11 +14,11 @@
  * limitations under the License.
  *
  */
-package jrouter.servlet.filter;
+package net.jrouter.http.servlet.filter;
 
 import javax.servlet.FilterConfig;
-import jrouter.ActionFactory;
 import lombok.extern.slf4j.Slf4j;
+import net.jrouter.ActionFactory;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**

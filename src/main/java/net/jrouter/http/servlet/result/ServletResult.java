@@ -14,14 +14,14 @@
  * limitations under the License.
  *
  */
-package jrouter.servlet.result;
+package net.jrouter.http.servlet.result;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import jrouter.annotation.ResultType;
-import jrouter.servlet.ServletActionInvocation;
+import net.jrouter.annotation.ResultType;
+import net.jrouter.http.servlet.ServletActionInvocation;
 
 /**
  * Result for http servlet, include "forward" and "redirect".
@@ -51,7 +51,7 @@ public class ServletResult {
      *
      * @return 返回forward后的调用结果。
      *
-     * @see jrouter.result.DefaultResult#actionForward(jrouter.ActionInvocation)
+     * @see net.jrouter.result.DefaultResult#actionForward(net.jrouter.ActionInvocation)
      */
     @ResultType(type = ACTION_FORWARD)
     public static Object actionForward(ServletActionInvocation invocation) {

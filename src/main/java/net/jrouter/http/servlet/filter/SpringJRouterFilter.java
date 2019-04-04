@@ -14,24 +14,24 @@
  * limitations under the License.
  *
  */
-package jrouter.servlet.filter;
+package net.jrouter.http.servlet.filter;
 
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.FilterConfig;
-import jrouter.ActionFactory;
-import jrouter.config.Configuration;
-import jrouter.spring.SpringObjectFactory;
 import lombok.extern.slf4j.Slf4j;
+import net.jrouter.ActionFactory;
+import net.jrouter.config.Configuration;
+import net.jrouter.spring.SpringObjectFactory;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
  * 通过configLocation配置Configuration进而加载ActionFactory对象。
  * ActionFactory生成新对象实例依托于springframework工厂创建新的对象实例，因而必须首先加载spring容器。
  *
- * @see jrouter.ObjectFactory
- * @see jrouter.spring.SpringObjectFactory
- * @see jrouter.config.Configuration
+ * @see net.jrouter.ObjectFactory
+ * @see net.jrouter.spring.SpringObjectFactory
+ * @see net.jrouter.config.Configuration
  */
 @Slf4j
 public class SpringJRouterFilter extends JRouterFilter {

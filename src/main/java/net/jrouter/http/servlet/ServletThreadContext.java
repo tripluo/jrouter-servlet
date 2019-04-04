@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package jrouter.servlet;
+package net.jrouter.http.servlet;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +22,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import jrouter.ActionInvocation;
+import net.jrouter.ActionInvocation;
 
 /**
  * ServletThreadContext是一个线程变量，使用了一个公共的{@link ThreadLocal}。
@@ -37,14 +37,10 @@ import jrouter.ActionInvocation;
 public final class ServletThreadContext {
 
     /** Thread Safe */
-    private static final ThreadLocal<ServletThreadContext> THREAD_LOCAL = new ThreadLocal<ServletThreadContext>() {
+    private static final ThreadLocal<ServletThreadContext> THREAD_LOCAL = ThreadLocal.withInitial(() -> new ServletThreadContext(new HashMap<String, Object>(8)));
 
-        @Override
-        protected ServletThreadContext initialValue() {
-            return new ServletThreadContext(new HashMap<String, Object>(8));
-        }
-
-    };
+    /** Store key-value */
+    private final Map<String, ?> contextMap;
 
     /** Action运行时上下文 */
     private ActionInvocation<?> actionInvocation;
@@ -60,9 +56,6 @@ public final class ServletThreadContext {
 
     /** ServletContext */
     private ServletContext servletContext;
-
-    /** Store key-value */
-    private final Map<String, ?> contextMap;
 
     /** Exception */
     private Exception exception;
@@ -122,6 +115,15 @@ public final class ServletThreadContext {
     }
 
     /**
+     * Gets the HTTP servlet request object.
+     *
+     * @return the HTTP servlet request object.
+     */
+    public static HttpServletRequest getRequest() {
+        return get().request;
+    }
+
+    /**
      * Sets the HTTP servlet request object.
      *
      * @param request the HTTP servlet request object.
@@ -129,15 +131,6 @@ public final class ServletThreadContext {
     public static void setRequest(HttpServletRequest request) {
         get().request = request;
         get().requestMap = new RequestMap(request);
-    }
-
-    /**
-     * Gets the HTTP servlet request object.
-     *
-     * @return the HTTP servlet request object.
-     */
-    public static HttpServletRequest getRequest() {
-        return get().request;
     }
 
     /**
@@ -173,15 +166,6 @@ public final class ServletThreadContext {
     }
 
     /**
-     * Sets the HTTP servlet response object.
-     *
-     * @param response the HTTP servlet response object.
-     */
-    public static void setResponse(HttpServletResponse response) {
-        get().response = response;
-    }
-
-    /**
      * Gets the HTTP servlet response object.
      *
      * @return the HTTP servlet response object.
@@ -189,6 +173,15 @@ public final class ServletThreadContext {
     public static HttpServletResponse getResponse() {
         return get().response;
 
+    }
+
+    /**
+     * Sets the HTTP servlet response object.
+     *
+     * @param response the HTTP servlet response object.
+     */
+    public static void setResponse(HttpServletResponse response) {
+        get().response = response;
     }
 
     /**

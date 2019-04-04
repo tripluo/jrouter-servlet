@@ -1,12 +1,12 @@
-package jrouter.servlet.spring;
+package net.jrouter.http.servlet.spring;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import jrouter.impl.ResultTypeProxy;
-import jrouter.servlet.ObjectHandlerActionFactory;
-import jrouter.servlet.ServletActionFactory.DefaultServletActionFactory;
-import jrouter.spring.SpringObjectFactory;
+import net.jrouter.http.servlet.ObjectHandlerActionFactory;
+import net.jrouter.http.servlet.ServletActionFactory;
+import net.jrouter.impl.ResultTypeProxy;
+import net.jrouter.spring.SpringObjectFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -33,7 +33,7 @@ public class ObjectHandlerActionFactoryBean implements FactoryBean<ObjectHandler
     private Map<Class, String> objectResultTypes = Collections.EMPTY_MAP;
 
     @lombok.Setter
-    private DefaultServletActionFactory.Properties properties = null;
+    private ServletActionFactory.DefaultServletActionFactory.Properties properties = null;
 
     /* ActionFactory对象 */
     private ObjectHandlerActionFactory actionFactory;
@@ -41,7 +41,7 @@ public class ObjectHandlerActionFactoryBean implements FactoryBean<ObjectHandler
     @Override
     public void afterPropertiesSet() throws Exception {
         if (properties == null) {
-            properties = new DefaultServletActionFactory.Properties();
+            properties = new ServletActionFactory.DefaultServletActionFactory.Properties();
             properties.setObjectFactory(new SpringObjectFactory(applicationContext));
         }
         actionFactory = new ObjectHandlerActionFactory(properties);

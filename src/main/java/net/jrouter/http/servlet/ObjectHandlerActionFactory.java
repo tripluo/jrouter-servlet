@@ -1,10 +1,10 @@
-package jrouter.servlet;
+package net.jrouter.http.servlet;
 
 import java.util.Collections;
 import java.util.Map;
-import jrouter.ActionInvocation;
-import jrouter.impl.ResultTypeProxy;
-import jrouter.util.MethodUtil;
+import net.jrouter.ActionInvocation;
+import net.jrouter.impl.ResultTypeProxy;
+import net.jrouter.util.MethodUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +19,7 @@ public class ObjectHandlerActionFactory extends ServletActionFactory.DefaultServ
 
     /**
      * Object class to ResultType mapping.
-     *
+     * <p>
      * 完全类型匹配，不考虑父子类继承等。
      */
     @lombok.Setter
@@ -39,7 +39,7 @@ public class ObjectHandlerActionFactory extends ServletActionFactory.DefaultServ
         ResultTypeProxy resultType = null;
         //优先根据结果对象的类型获取处理类型
         if (res != null && (resultType = objectResultTypes.get(res.getClass())) != null) {
-            return MethodUtil.invoke(resultType, invocation);
+            return MethodUtil.invokeConvertParameters(resultType, invocation);
         }
         return super.invokeResult(invocation, res);
     }

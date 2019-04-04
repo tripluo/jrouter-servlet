@@ -8,6 +8,9 @@
     <root level="DEBUG">
         <appender-ref ref="stdout"/>
     </root>
-    <logger name="jrouter" level="INFO"/>
+    <logger name="net.jrouter" level="INFO"/>
+    <logger name="net.jrouter.http" level="DEBUG"/>
+    <logger name="io.netty" level="INFO"/>
+    <logger name="org.apache.http" level="INFO"/>
     <logger name="org.springframework" level="INFO"/>
 </configuration>

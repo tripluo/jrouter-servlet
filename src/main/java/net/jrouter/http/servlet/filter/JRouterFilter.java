@@ -14,17 +14,17 @@
  * limitations under the License.
  *
  */
-package jrouter.servlet.filter;
+package net.jrouter.http.servlet.filter;
 
-import javax.servlet.*;
-import jrouter.ActionFactory;
-import jrouter.config.Configuration;
+import javax.servlet.FilterConfig;
 import lombok.extern.slf4j.Slf4j;
+import net.jrouter.ActionFactory;
+import net.jrouter.config.Configuration;
 
 /**
  * JRouter servlet filter.通过configLocation配置{@code Configuration}进而加载{@code ActionFactory}对象。
  *
- * @see jrouter.config.Configuration
+ * @see net.jrouter.config.Configuration
  */
 @lombok.Getter
 @lombok.Setter
@@ -32,9 +32,9 @@ import lombok.extern.slf4j.Slf4j;
 public class JRouterFilter extends AbstractJRouterFilter {
 
     /**
-     * Location of the jrouter ActionFactory's configuration file, default load resource file jrouter.xml.
+     * Location of the jrouter ActionFactory's configuration file, default load resource file net.jrouter.xml.
      */
-    private String configLocation = "jrouter.xml";
+    private String configLocation = "net.jrouter.xml";
 
     @Override
     public void init(FilterConfig filterConfig) {

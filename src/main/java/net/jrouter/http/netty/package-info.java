@@ -15,6 +15,6 @@
  *
  */
 /**
- * jrouter web filter.
+ * jrouter for netty http.
  */
-package jrouter.servlet.filter;
+package net.jrouter.http.netty;

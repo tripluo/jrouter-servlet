@@ -14,33 +14,32 @@
  * limitations under the License.
  *
  */
-package jrouter.servlet.filter;
+package net.jrouter.http.servlet.filter;
 
 import java.io.IOException;
 import java.util.Map;
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
-import jrouter.ActionFactory;
-import jrouter.NotFoundException;
-import jrouter.impl.InvocationProxyException;
-import jrouter.servlet.ServletActionFactory;
-import jrouter.servlet.ServletThreadContext;
-import jrouter.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
+import net.jrouter.ActionFactory;
+import net.jrouter.NotFoundException;
+import net.jrouter.http.servlet.ServletActionFactory;
+import net.jrouter.http.servlet.ServletThreadContext;
+import net.jrouter.impl.InvocationProxyException;
+import net.jrouter.util.StringUtil;
 
 /**
  * 抽象 JRouter servlet filter.
  */
 @Slf4j
 public abstract class AbstractJRouterFilter implements Filter {
+
+    /**
+     * Http ServletContext reference.
+     */
+    protected ServletContext servletContext;
 
     /** Set http request and response encoding */
     @lombok.Getter
@@ -78,11 +77,6 @@ public abstract class AbstractJRouterFilter implements Filter {
     @lombok.Setter
     private boolean logNotFoundException = true;
 
-    /**
-     * Http ServletContext reference.
-     */
-    protected ServletContext servletContext;
-
     @Override
     public void init(FilterConfig filterConfig) {
         String varEncoding = filterConfig.getInitParameter("encoding");
@@ -105,7 +99,9 @@ public abstract class AbstractJRouterFilter implements Filter {
         if (varLogNotFoundException != null) {
             logNotFoundException = Boolean.parseBoolean(varLogNotFoundException);
         }
-
+        if (StringUtil.isNotBlank(varFactoryName)) {
+            factoryName = varFactoryName;
+        }
         servletContext = filterConfig.getServletContext();
         try {
             if (useThreadLocal) {
@@ -114,17 +110,15 @@ public abstract class AbstractJRouterFilter implements Filter {
             }
             //create ActionFactory
             actionFactory = createActionFactory(filterConfig);
-
-            if (StringUtil.isNotBlank(varFactoryName)) {
-                factoryName = varFactoryName;
-                servletContext.setAttribute(factoryName, actionFactory);
-                log.info("Set ActionFactory's name in ServletContext : {}", factoryName);
-            }
             isServletActionFactory = (actionFactory instanceof ServletActionFactory);
         } finally {
             if (useThreadLocal) {
                 ServletThreadContext.remove();
             }
+        }
+        if (StringUtil.isNotBlank(factoryName)) {
+            servletContext.setAttribute(factoryName, actionFactory);
+            log.info("Set ActionFactory's name in ServletContext : {}", factoryName);
         }
     }
 
@@ -140,7 +134,7 @@ public abstract class AbstractJRouterFilter implements Filter {
         if (trimRequestParameter) {
             Map map = request.getParameterMap();
             if (!(map == null || map.isEmpty())) {
-                request = new TrimParameterRequestWraper(request);
+                request = new TrimParameterRequestWrapper(request);
             }
         }
         //create thread local
@@ -159,7 +153,7 @@ public abstract class AbstractJRouterFilter implements Filter {
             }
         } catch (NotFoundException e) {
             if (logNotFoundException) {
-                log.error(e.getMessage(), e);
+                log.error("Not Found - {}", request.getRequestURI(), e);
             }
             response.sendError(HttpServletResponse.SC_NOT_FOUND, e.getMessage());
         } catch (InvocationProxyException e) {
@@ -210,15 +204,15 @@ public abstract class AbstractJRouterFilter implements Filter {
         ServletThreadContext.setResponse(response);
     }
 
-    /** TrimParameterRequestWraper */
-    private static final class TrimParameterRequestWraper extends HttpServletRequestWrapper {
+    /** TrimParameterRequestWrapper */
+    private static final class TrimParameterRequestWrapper extends HttpServletRequestWrapper {
 
         /**
          * Constructs a request object wrapping the given request.
          *
          * @throws java.lang.IllegalArgumentException if the request is null
          */
-        public TrimParameterRequestWraper(HttpServletRequest request) {
+        public TrimParameterRequestWrapper(HttpServletRequest request) {
             super(request);
         }
 

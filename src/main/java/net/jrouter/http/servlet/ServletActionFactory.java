@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package jrouter.servlet;
+package net.jrouter.http.servlet;
 
 import java.lang.reflect.Method;
 import java.util.Locale;
@@ -23,12 +23,12 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import jrouter.ActionFactory;
-import jrouter.ActionInvocation;
-import jrouter.JRouterException;
-import jrouter.annotation.Dynamic;
-import jrouter.impl.PathActionFactory;
-import jrouter.support.ActionInvocationDelegate;
+import net.jrouter.ActionFactory;
+import net.jrouter.ActionInvocation;
+import net.jrouter.JRouterException;
+import net.jrouter.annotation.Dynamic;
+import net.jrouter.impl.PathActionFactory;
+import net.jrouter.support.ActionInvocationDelegate;
 
 /**
  * {@code ServletActionFactory} invoke Action with Http parameters.
@@ -36,7 +36,7 @@ import jrouter.support.ActionInvocationDelegate;
 public interface ServletActionFactory extends ActionFactory<String> {
 
     /**
-     * Use this instead of {@link #invokeAction(java.lang.Object, java.lang.Object...)} to pass Http parameters.
+     * Use this instead of {@link #invokeAction(Object, Object...)} to pass Http parameters.
      *
      * @param <T> Generic type.
      * @param path Action path.
@@ -47,11 +47,10 @@ public interface ServletActionFactory extends ActionFactory<String> {
      * @return Action invoked result.
      *
      * @throws JRouterException if error occurred.
-     *
-     * @see #invokeAction(java.lang.String, java.lang.Object...)
+     * @see #invokeAction(Object, Object...)
      */
     <T> T invokeAction(String path, HttpServletRequest request, HttpServletResponse response,
-            ServletContext servletContext) throws JRouterException;
+                       ServletContext servletContext) throws JRouterException;
 
     /**
      * 提供{@code ServletActionFactory}接口默认实现。覆写{@link #createActionInvocation}方法创建{@code ServletActionFactory}接口对象。
@@ -61,9 +60,11 @@ public interface ServletActionFactory extends ActionFactory<String> {
     class DefaultServletActionFactory extends PathActionFactory.ColonString implements ServletActionFactory {
 
         /** Use ThreadLocal to store Http parameter object or not */
-        private final boolean useThreadLocal = true;
+        @lombok.Getter
+        private final boolean useThreadLocal;
 
         /* Action path是否大小写敏感，默认区分大小写 **/
+        @lombok.Getter
         private final boolean actionPathCaseSensitive;
 
         /**
@@ -73,26 +74,13 @@ public interface ServletActionFactory extends ActionFactory<String> {
          */
         public DefaultServletActionFactory(Properties properties) {
             super(properties);
+            this.useThreadLocal = properties.useThreadLocal;
             this.actionPathCaseSensitive = properties.actionPathCaseSensitive;
-        }
-
-        /**
-         * DefaultServletActionFactory 属性。
-         */
-        @lombok.Getter
-        @lombok.Setter
-        public static class Properties extends ColonString.Properties {
-
-            /**
-             * @see DefaultServletActionFactory#actionPathCaseSensitive
-             */
-            private boolean actionPathCaseSensitive = true;
-
         }
 
         @Override
         public <T> T invokeAction(String path, HttpServletRequest request, HttpServletResponse response,
-                ServletContext sc) throws JRouterException {
+                                  ServletContext sc) throws JRouterException {
             //invoke and pass http parameters
             return (T) super.invokeAction(actionPathCaseSensitive ? path : path.toLowerCase(Locale.getDefault()),
                     request, response, sc);
@@ -105,8 +93,8 @@ public interface ServletActionFactory extends ActionFactory<String> {
          */
         @Override
         protected ActionInvocation<String> createActionInvocation(String path, Object... params) {
-            //create no parameters ActionInvocation
-            ActionInvocation invocation = super.createActionInvocation(path);
+            //create servlet parameters ActionInvocation
+            ActionInvocation<String> invocation = super.createActionInvocation(path, params);
             DefaultServletActionInvocation servletInvocation = null;
 
             //优先从invokeAction参数中获取Http参数对象，已由invokeAction方法指定参数顺序
@@ -132,26 +120,11 @@ public interface ServletActionFactory extends ActionFactory<String> {
                 ServletThreadContext.setActionInvocation(servletInvocation);
             }
             if (servletInvocation != null) {
-                //pass DefaultServletActionInvocation as parameter to the converter if needed
-                invocation.setParameterConverter(invocation.getActionFactory().getConverterFactory().getParameterConverter(servletInvocation));
-                //重设调用ActionInvocation的转换参数
-                invocation.setConvertParameters(
-                        new Object[]{
-                            servletInvocation.getRequest(),
-                            servletInvocation.getResponse(),
-                            servletInvocation.getServletContext(),
-                            servletInvocation});
                 return servletInvocation;
             } else {
-                //retrun ActionInvocation if can't get any http parameters and null DefaultServletActionInvocation
+                //return ActionInvocation if can't get any http parameters and null DefaultServletActionInvocation
                 return invocation;
             }
-        }
-
-        @Override
-        protected String buildActionPath(String namespace, String aname, Method method) {
-            String path = super.buildActionPath(namespace, aname, method);
-            return actionPathCaseSensitive ? path : path.toLowerCase(Locale.getDefault());
         }
 
         /**
@@ -171,14 +144,28 @@ public interface ServletActionFactory extends ActionFactory<String> {
         }
 
         /**
-         * Action路径是否大小写敏感，默认区分大小写。
-         *
-         * @return Action路径是否大小写敏感，默认区分大小写。
+         * DefaultServletActionFactory 属性。
          */
-        public boolean isActionPathCaseSensitive() {
-            return actionPathCaseSensitive;
-        }
+        @lombok.Getter
+        @lombok.Setter
+        public static class Properties extends ColonString.Properties {
 
+            /**
+             * @see DefaultServletActionFactory#useThreadLocal
+             */
+            private boolean useThreadLocal = true;
+
+            /**
+             * @see DefaultServletActionFactory#actionPathCaseSensitive
+             */
+            private boolean actionPathCaseSensitive = true;
+
+            @Override
+            protected String buildActionPath(String namespace, String aname, Method method) {
+                String path = super.buildActionPath(namespace, aname, method);
+                return actionPathCaseSensitive ? path : path.toLowerCase(Locale.getDefault());
+            }
+        }
     }
 
     /**
@@ -203,7 +190,7 @@ public interface ServletActionFactory extends ActionFactory<String> {
         private final Map<String, Object> contextMap;
 
         public DefaultServletActionInvocation(ActionInvocation<String> invocation, HttpServletRequest request, //NOPMD ExcessiveParameterList
-                HttpServletResponse response, ServletContext servletContext, Map<String, Object> contextMap) {
+                                              HttpServletResponse response, ServletContext servletContext, Map<String, Object> contextMap) {
             super();
             this.delegate = invocation;
             this.request = request;
@@ -211,6 +198,7 @@ public interface ServletActionFactory extends ActionFactory<String> {
             this.response = response;
             this.servletContext = servletContext;
             this.contextMap = contextMap;
+            this.setConvertParameters(this);
         }
 
         @Override
