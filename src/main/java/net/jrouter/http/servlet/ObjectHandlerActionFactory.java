@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * 提供非{@code String}类型的结果类型处理，
- * 及可配置的类型{@code Class} -> 结果类型{@link ResultTypeProxy}映射。
+ * 及可配置的类型{@code Class} - 结果类型{@link ResultTypeProxy}映射。
  */
 public class ObjectHandlerActionFactory extends ServletActionFactory.DefaultServletActionFactory {
 

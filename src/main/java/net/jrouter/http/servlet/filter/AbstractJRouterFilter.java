@@ -14,6 +14,7 @@
  * limitations under the License.
  *
  */
+
 package net.jrouter.http.servlet.filter;
 
 import java.io.IOException;
@@ -194,7 +195,7 @@ public abstract class AbstractJRouterFilter implements Filter {
     }
 
     /**
-     * Put request & response in thread local variable.
+     * Put request and response in thread local variable.
      *
      * @param request HttpServletRequest.
      * @param response HttpServletResponse.

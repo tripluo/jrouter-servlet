@@ -14,6 +14,7 @@
  * limitations under the License.
  *
  */
+
 package net.jrouter.http.netty;
 
 import io.netty.channel.*;
@@ -138,26 +139,24 @@ public class JRouterHttpRequestHandler extends ChannelInboundHandlerAdapter {
                     ctx.write(response);
                     ChannelFuture lastContentFuture = ctx.writeAndFlush((HttpChunkedInput) res, ctx.newProgressivePromise());
                     // HttpChunkedInput will write the end marker (LastHttpContent) for us.
-                    lastContentFuture.addListener(new ChannelProgressiveFutureListener() {
+                    if (log.isDebugEnabled()) {
+                        lastContentFuture.addListener(new ChannelProgressiveFutureListener() {
 
-                        @Override
-                        public void operationProgressed(ChannelProgressiveFuture future, long progress, long total) {
-                            if (total < 0) { // total unknown
-                                log.error(future.channel() + " Transfer progress: " + progress);
-                            } else {
+                            @Override
+                            public void operationProgressed(ChannelProgressiveFuture future, long progress, long total) {
                                 if (log.isDebugEnabled()) {
                                     log.debug(future.channel() + " Transfer progress: " + progress + " / " + total);
                                 }
                             }
-                        }
 
-                        @Override
-                        public void operationComplete(ChannelProgressiveFuture future) {
-                            if (log.isDebugEnabled()) {
-                                log.debug(future.channel() + " Transfer complete.");
+                            @Override
+                            public void operationComplete(ChannelProgressiveFuture future) {
+                                if (log.isDebugEnabled()) {
+                                    log.debug(future.channel() + " Transfer complete.");
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
                     // Decide whether to close the connection or not.
                     if (!HttpUtil.isKeepAlive(fullHttpRequest)) {
                         // Close the connection when the whole content is written out.

@@ -1,6 +1,9 @@
 
 **jrouter-servlet** 是一个基于[jrouter](https://github.com/tripluo/jrouter)的Servlet组件；提供快速的路由定位、方法调用、参数绑定等功能。其核心设计目标即小而精、代码少、轻量级、易扩展、Restful。
 
+● require [jdk 1.8+](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
+
+◇ [changelog](https://github.com/tripluo/jrouter-servlet/commits/master)
 
 ### Maven: ###
 
@@ -8,7 +11,7 @@
 <dependency>
     <groupId>net.jrouter</groupId>
     <artifactId>jrouter-servlet</artifactId>
-    <version>1.8.0</version>
+    <version>1.8.1</version>
 </dependency>
 ```
 
