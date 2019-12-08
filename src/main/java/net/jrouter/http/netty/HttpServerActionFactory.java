@@ -47,7 +47,7 @@ public interface HttpServerActionFactory extends ActionFactory<String> {
      *
      * @return Action invoked result.
      *
-     * @throws JRouterException if error occurred.
+     * @throws JRouterException if error occurrs.
      * @see #invokeAction(Object, Object...)
      */
     <T> T invokeAction(String path, FullHttpRequest request, FullHttpResponse response, ChannelHandlerContext context)

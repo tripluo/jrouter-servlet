@@ -47,7 +47,7 @@ public interface ServletActionFactory extends ActionFactory<String> {
      *
      * @return Action invoked result.
      *
-     * @throws JRouterException if error occurred.
+     * @throws JRouterException if error occurrs.
      * @see #invokeAction(Object, Object...)
      */
     <T> T invokeAction(String path, HttpServletRequest request, HttpServletResponse response,
