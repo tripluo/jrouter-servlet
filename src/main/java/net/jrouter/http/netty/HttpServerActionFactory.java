@@ -27,6 +27,7 @@ import java.util.Map;
 import net.jrouter.ActionFactory;
 import net.jrouter.ActionInvocation;
 import net.jrouter.JRouterException;
+import net.jrouter.PathGenerator;
 import net.jrouter.annotation.Dynamic;
 import net.jrouter.impl.PathActionFactory;
 import net.jrouter.support.ActionInvocationDelegate;
@@ -99,7 +100,7 @@ public interface HttpServerActionFactory extends ActionFactory<String> {
                         (FullHttpRequest) params[0],
                         (FullHttpResponse) params[1],
                         (ChannelHandlerContext) params[2],
-                        new HashMap<String, Object>(4)
+                        new HashMap<>(4)
                 );
                 return httpInvocation;
             }
@@ -136,9 +137,20 @@ public interface HttpServerActionFactory extends ActionFactory<String> {
             private boolean actionPathCaseSensitive = true;
 
             @Override
-            protected String buildActionPath(String namespace, String aname, Method method) {
-                String path = super.buildActionPath(namespace, aname, method);
-                return actionPathCaseSensitive ? path : path.toLowerCase(Locale.getDefault());
+            protected void afterPropertiesSet() {
+                if (getPathGenerator() == null) {
+                    PathGenerator<String> pathGenerator = new StringPathGenerator(this.getPathSeparator()) {
+
+                        @Override
+                        protected String buildActionPath(String namespace, String aname, Method method) {
+                            String path = super.buildActionPath(namespace, aname, method);
+                            return actionPathCaseSensitive ? path : path.toLowerCase(Locale.getDefault());
+                        }
+                    };
+                    setPathGenerator(pathGenerator);
+                }
+                super.afterPropertiesSet();
+
             }
         }
     }
