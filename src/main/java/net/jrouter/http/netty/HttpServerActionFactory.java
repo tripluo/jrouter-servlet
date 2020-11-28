@@ -150,7 +150,6 @@ public interface HttpServerActionFactory extends ActionFactory<String> {
                     setPathGenerator(pathGenerator);
                 }
                 super.afterPropertiesSet();
-
             }
         }
     }

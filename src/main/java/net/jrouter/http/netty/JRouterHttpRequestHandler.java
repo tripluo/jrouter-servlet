@@ -62,43 +62,6 @@ public class JRouterHttpRequestHandler extends ChannelInboundHandlerAdapter {
         this.httpServerActionFactory = httpServerActionFactory;
     }
 
-    /**
-     * Get action's path from URI.
-     */
-    private static String parseActionPath(String uri) {
-        if (StringUtil.isEmpty(uri)) {
-            return uri;
-        }
-        int start = 0;
-        if (uri.charAt(0) != PATH_SEPARATOR) {
-            int idx = uri.indexOf("://");
-            //no ://
-            if (idx > -1) {
-                int sepIdx = uri.indexOf(PATH_SEPARATOR, idx + 3);
-                if (sepIdx == -1) {
-                    return PATH_SEPARATOR_STRING;
-                } else {
-                    start = sepIdx;
-                }
-            } else {
-                uri = PATH_SEPARATOR + uri;
-            }
-        }
-        int end = findPathEndIndex(uri);
-        return end > -1 ? uri.substring(start, end) : uri.substring(start);
-    }
-
-    private static int findPathEndIndex(String uri) {
-        int len = uri.length();
-        for (int i = 0; i < len; i++) {
-            char c = uri.charAt(i);
-            if (c == '?' || c == '#') {
-                return i;
-            }
-        }
-        return len;
-    }
-
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         FullHttpRequest fullHttpRequest;
@@ -109,7 +72,7 @@ public class JRouterHttpRequestHandler extends ChannelInboundHandlerAdapter {
                 Object res = null;
                 invoke:
                 try {
-                    String actionPath = parseActionPath(uri);
+                    String actionPath = parseActionPath(fullHttpRequest);
                     if (StringUtil.isNotBlank(contextPath) && !PATH_SEPARATOR_STRING.equals(contextPath)) {
                         if (actionPath.startsWith(contextPath + PATH_SEPARATOR)) {
                             actionPath = actionPath.substring(contextPath.length());
@@ -171,6 +134,54 @@ public class JRouterHttpRequestHandler extends ChannelInboundHandlerAdapter {
         } else {
             ctx.fireChannelRead(msg);
         }
+    }
+
+    /**
+     * A hook to give subclass another way to create Action's invoke path.
+     *
+     * @param request FullHttpRequest object.
+     *
+     * @return Action's invoke path.
+     */
+    protected String parseActionPath(FullHttpRequest request) {
+        return parseActionPath(request.uri());
+    }
+
+    /**
+     * Get action's path from URI.
+     */
+    private static String parseActionPath(String uri) {
+        if (StringUtil.isEmpty(uri)) {
+            return uri;
+        }
+        int start = 0;
+        if (uri.charAt(0) != PATH_SEPARATOR) {
+            int idx = uri.indexOf("://");
+            //no ://
+            if (idx > -1) {
+                int sepIdx = uri.indexOf(PATH_SEPARATOR, idx + 3);
+                if (sepIdx == -1) {
+                    return PATH_SEPARATOR_STRING;
+                } else {
+                    start = sepIdx;
+                }
+            } else {
+                uri = PATH_SEPARATOR + uri;
+            }
+        }
+        int end = findPathEndIndex(uri);
+        return end > -1 ? uri.substring(start, end) : uri.substring(start);
+    }
+
+    private static int findPathEndIndex(String uri) {
+        int len = uri.length();
+        for (int i = 0; i < len; i++) {
+            char c = uri.charAt(i);
+            if (c == '?' || c == '#') {
+                return i;
+            }
+        }
+        return len;
     }
 
     protected void writeHttpResponse(ChannelHandlerContext ctx, FullHttpRequest request, FullHttpResponse response) {

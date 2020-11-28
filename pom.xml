@@ -9,15 +9,40 @@
     </parent>
     <artifactId>jrouter-servlet</artifactId>
     <packaging>jar</packaging>
-    <version>1.8.3</version>
+    <version>1.8.4</version>
     <name>JRouter-servlet</name>
     <url>https://github.com/tripluo/jrouter-servlet</url>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <scm>
+        <connection>scm:git:git@github.com:tripluo/jrouter-servlet.git</connection>
+        <developerConnection>scm:git:git@github.com:tripluo/jrouter-servlet.git</developerConnection>
+        <url>https://github.com/tripluo/jrouter-servlet</url>
+    </scm>
+    <developers>
+        <developer>
+            <id>tripluo</id>
+            <name>Luo Li</name>
+            <email>sunjumper@163.com</email>
+        </developer>
+    </developers>
+    <description>jrouter for http request mapping also adapted servlet.</description>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <checkstyle.config.file></checkstyle.config.file>
+        <pmd.rule.file></pmd.rule.file>
+    </properties>
     <dependencies>
         <!-- jrouter -->
         <dependency>
             <groupId>net.jrouter</groupId>
             <artifactId>jrouter</artifactId>
-            <version>1.8.3</version>
+            <version>1.8.4</version>
         </dependency>
         <!-- logback -->
         <dependency>
@@ -254,29 +279,4 @@
             </distributionManagement>
         </profile>
     </profiles>
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <checkstyle.config.file></checkstyle.config.file>
-        <pmd.rule.file></pmd.rule.file>
-    </properties>
-    <licenses>
-        <license>
-            <name>The Apache Software License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
-    <scm>
-        <connection>scm:git:git@github.com:tripluo/jrouter-servlet.git</connection>
-        <developerConnection>scm:git:git@github.com:tripluo/jrouter-servlet.git</developerConnection>
-        <url>https://github.com/tripluo/jrouter-servlet</url>
-    </scm>
-    <developers>
-        <developer>
-            <id>tripluo</id>
-            <name>Luo Li</name>
-            <email>sunjumper@163.com</email>
-        </developer>
-    </developers>
-    <description>jrouter for http request mapping also adapted servlet.</description>
 </project>
