@@ -61,11 +61,15 @@ public interface ServletActionFactory extends ActionFactory<String> {
      */
     class DefaultServletActionFactory extends PathActionFactory.ColonString implements ServletActionFactory {
 
-        /** Use ThreadLocal to store Http parameter object or not */
+        /**
+         * Use ThreadLocal to store Http parameter object or not.
+         */
         @lombok.Getter
         private final boolean useThreadLocal;
 
-        /* Action path是否大小写敏感，默认区分大小写 **/
+        /**
+         * Action path是否大小写敏感，默认区分大小写。
+         */
         @lombok.Getter
         private final boolean actionPathCaseSensitive;
 
@@ -186,19 +190,29 @@ public interface ServletActionFactory extends ActionFactory<String> {
     @Dynamic
     class DefaultServletActionInvocation extends ActionInvocationDelegate<String> implements ServletActionInvocation {
 
-        /** Http request */
+        /**
+         * Http request
+         */
         private final HttpServletRequest request;
 
-        /** Http response */
+        /**
+         * Http response
+         */
         private final HttpServletResponse response;
 
-        /** Http request parameters map */
+        /**
+         * Http request parameters map
+         */
         private final RequestMap requestMap;
 
-        /** ServletContext */
+        /**
+         * ServletContext
+         */
         private final ServletContext servletContext;
 
-        /** Store key-value */
+        /**
+         * Store key-value
+         */
         private final Map<String, Object> contextMap;
 
         public DefaultServletActionInvocation(ActionInvocation<String> invocation, HttpServletRequest request, //NOPMD ExcessiveParameterList

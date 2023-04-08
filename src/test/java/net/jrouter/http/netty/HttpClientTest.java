@@ -21,20 +21,20 @@ import io.restassured.response.ValidatableResponse;
 import net.jrouter.http.DemoAction;
 import net.jrouter.http.RestUtil;
 import static org.hamcrest.Matchers.equalTo;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * HttpClientTest.
  *
  * @see DemoAction
  */
-public class HttpClientTest extends JRouterHttpRequestHandlerNGTest {
+class HttpClientTest extends JRouterHttpRequestHandlerTest {
 
     /**
      * Test of test method, of class DemoAction.
      */
     @Test
-    public void test100() {
+    void test100() {
         ValidatableResponse vs = RestUtil.givenNetty()
                 .when()
                 .get("/test/test100")
@@ -48,7 +48,7 @@ public class HttpClientTest extends JRouterHttpRequestHandlerNGTest {
      * Test of test method, of class DemoAction.
      */
     @Test
-    public void test200() {
+    void test200() {
         ValidatableResponse vs = RestUtil.givenNetty()
                 .when()
                 .get("/test/test200")

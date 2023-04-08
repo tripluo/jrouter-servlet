@@ -24,7 +24,7 @@ public class RestUtil {
                 .port(port);
     }
 
-    public static RequestSpecification given_log(int port) {
+    public static RequestSpecification givenLog(int port) {
         return given(port)
                 .log()
                 .all();

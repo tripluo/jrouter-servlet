@@ -32,22 +32,38 @@ import net.jrouter.util.StringUtil;
 @Slf4j
 public class JRouterHttpRequestHandler extends ChannelInboundHandlerAdapter {
 
-    /** 默认的路径分隔符 */
+    /**
+     * 默认的路径分隔符。
+     */
     public static final char PATH_SEPARATOR = '/';
 
+    /**
+     * 默认的路径分隔符。
+     */
     private static final String PATH_SEPARATOR_STRING = String.valueOf(PATH_SEPARATOR);
 
+    /**
+     * ActionFactory.
+     */
     @lombok.Getter
     private final HttpServerActionFactory httpServerActionFactory;
 
+    /**
+     * Http request context path.
+     */
     @lombok.Getter
     private String contextPath;
 
-    /** Check if need to log {@code NotFoundException} */
+    /**
+     * Check if you need to log {@code NotFoundException}.
+     */
     @lombok.Getter
     @lombok.Setter
     private boolean logNotFoundException = true;
 
+    /**
+     * Provide a predicate to test handle http request or not.
+     */
     @lombok.Setter
     @lombok.NonNull
     private BiPredicate<ChannelHandlerContext, FullHttpRequest> httpRequestPredicate = (channelHandlerContext, fullHttpRequest) -> true;
@@ -58,6 +74,7 @@ public class JRouterHttpRequestHandler extends ChannelInboundHandlerAdapter {
      * @param httpServerActionFactory HttpServerActionFactory object.
      */
     public JRouterHttpRequestHandler(HttpServerActionFactory httpServerActionFactory) {
+        super();
         Objects.requireNonNull(httpServerActionFactory, "httpServerActionFactory can't be null");
         this.httpServerActionFactory = httpServerActionFactory;
     }
@@ -184,6 +201,9 @@ public class JRouterHttpRequestHandler extends ChannelInboundHandlerAdapter {
         return len;
     }
 
+    /**
+     * Write http response.
+     */
     protected void writeHttpResponse(ChannelHandlerContext ctx, FullHttpRequest request, FullHttpResponse response) {
         boolean keepAlive = HttpUtil.isKeepAlive(request);
         HttpUtil.setContentLength(response, response.content().readableBytes());
@@ -194,6 +214,9 @@ public class JRouterHttpRequestHandler extends ChannelInboundHandlerAdapter {
         }
     }
 
+    /**
+     * Write http response.
+     */
     protected void writeHttpResponse(ChannelHandlerContext ctx, FullHttpRequest request, FullHttpResponse response,
                                      Object invokedRes) {
         writeHttpResponse(ctx, request, response);

@@ -14,7 +14,9 @@ import org.slf4j.LoggerFactory;
  */
 public class ObjectHandlerActionFactory extends ServletActionFactory.DefaultServletActionFactory {
 
-    /** 日志 */
+    /**
+     * LOG.
+     */
     private static final Logger LOG = LoggerFactory.getLogger(ObjectHandlerActionFactory.class);
 
     /**

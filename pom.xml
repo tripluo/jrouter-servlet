@@ -5,17 +5,17 @@
     <parent>
         <groupId>net.jrouter</groupId>
         <artifactId>j-parent</artifactId>
-        <version>1.5</version>
+        <version>1.6</version>
     </parent>
     <artifactId>jrouter-servlet</artifactId>
     <packaging>jar</packaging>
-    <version>1.8.5</version>
+    <version>1.8.6</version>
     <name>JRouter-servlet</name>
     <url>https://github.com/tripluo/jrouter-servlet</url>
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
@@ -42,7 +42,7 @@
         <dependency>
             <groupId>net.jrouter</groupId>
             <artifactId>jrouter</artifactId>
-            <version>1.8.5</version>
+            <version>1.8.6</version>
         </dependency>
         <!-- logback -->
         <dependency>
@@ -92,16 +92,15 @@
             <artifactId>javax.servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
-        <!-- testng -->
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <scope>test</scope>
-        </dependency>
         <!-- spring test -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

@@ -20,17 +20,18 @@ package net.jrouter.http.netty;
 import java.lang.reflect.Method;
 import net.jrouter.http.DemoAction;
 import net.jrouter.http.netty.result.HttpResult;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 import org.springframework.util.ReflectionUtils;
-import static org.testng.Assert.assertEquals;
-import org.testng.annotations.Test;
 
 /**
- * JRouterHttpRequestHandlerNGTest.
+ * JRouterHttpRequestHandlerTest.
  */
-public class JRouterHttpRequestHandlerNGTest extends NettyHttpServerBaseTest {
+class JRouterHttpRequestHandlerTest extends NettyHttpServerBaseTest {
 
     private static String parseActionPath(String str) throws Exception {
         Method m = ReflectionUtils.findMethod(JRouterHttpRequestHandler.class, "parseActionPath", String.class);
+        assertNotNull(m);
         m.setAccessible(true);
         return (String) ReflectionUtils.invokeMethod(m, null, str);
     }
@@ -39,8 +40,8 @@ public class JRouterHttpRequestHandlerNGTest extends NettyHttpServerBaseTest {
      * Test of parseActionPath method, of class JRouterHttpRequestHandler.
      */
     @Test
-    public void testParseActionPathPath() throws Exception {
-        assertEquals(parseActionPath(null), null);
+    void testParseActionPathPath() throws Exception {
+        assertNull(parseActionPath(null));
         assertEquals(parseActionPath(""), "");
         assertEquals(parseActionPath("/"), "/");
         assertEquals(parseActionPath("/test"), "/test");

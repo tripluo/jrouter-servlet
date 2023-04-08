@@ -22,20 +22,31 @@ import org.springframework.context.ApplicationContextAware;
 public class ObjectHandlerActionFactoryBean implements FactoryBean<ObjectHandlerActionFactory>, InitializingBean,
         DisposableBean, ApplicationContextAware {
 
-    /** 日志 */
+    /**
+     * LOG.
+     */
     private static final Logger LOG = LoggerFactory.getLogger(ObjectHandlerActionFactoryBean.class);
 
-    /** ApplicationContext */
+    /**
+     * ApplicationContext.
+     */
     private ApplicationContext applicationContext;
 
-    /* object class to ResultType mapping */
+    /**
+     * Object class to ResultType mapping.
+     */
     @lombok.Setter
     private Map<Class, String> objectResultTypes = Collections.EMPTY_MAP;
 
+    /**
+     * Properties.
+     */
     @lombok.Setter
     private ServletActionFactory.DefaultServletActionFactory.Properties properties = null;
 
-    /* ActionFactory对象 */
+    /**
+     * ActionFactory.
+     */
     private ObjectHandlerActionFactory actionFactory;
 
     @Override

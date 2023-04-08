@@ -37,28 +37,44 @@ import net.jrouter.ActionInvocation;
  */
 public final class ServletThreadContext {
 
-    /** Thread Safe */
+    /**
+     * Thread Safe.
+     */
     private static final ThreadLocal<ServletThreadContext> THREAD_LOCAL = ThreadLocal.withInitial(() -> new ServletThreadContext(new HashMap<String, Object>(8)));
 
-    /** Store key-value */
+    /**
+     * Store key-value.
+     */
     private final Map<String, ?> contextMap;
 
-    /** Action运行时上下文 */
+    /**
+     * Action运行时上下文.
+     */
     private ActionInvocation<?> actionInvocation;
 
-    /** Http request */
+    /**
+     * Http request.
+     */
     private HttpServletRequest request;
 
-    /** Http response */
+    /**
+     * Http response.
+     */
     private HttpServletResponse response;
 
-    /** Http modifiable request parameters map */
+    /**
+     * Http modifiable request parameters map.
+     */
     private RequestMap requestMap;
 
-    /** ServletContext */
+    /**
+     * ServletContext.
+     */
     private ServletContext servletContext;
 
-    /** Exception */
+    /**
+     * Exception.
+     */
     private Exception exception;
 
     /**

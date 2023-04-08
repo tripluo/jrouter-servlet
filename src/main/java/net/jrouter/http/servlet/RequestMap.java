@@ -34,7 +34,9 @@ public class RequestMap extends AbstractMap<String, String[]> implements Seriali
 
     private static final long serialVersionUID = 1L;
 
-    /** the http request parameters */
+    /**
+     * Http request parameters.
+     */
     private final Map<String, String[]> parameters;
 
     /**

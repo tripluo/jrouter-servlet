@@ -61,7 +61,9 @@ public interface HttpServerActionFactory extends ActionFactory<String> {
      */
     class DefaultHttpActionFactory extends PathActionFactory implements HttpServerActionFactory {
 
-        /* Action path是否大小写敏感，默认区分大小写 **/
+        /**
+         * Action path是否大小写敏感，默认区分大小写
+         */
         @lombok.Getter
         private final boolean actionPathCaseSensitive;
 
@@ -160,16 +162,24 @@ public interface HttpServerActionFactory extends ActionFactory<String> {
     @Dynamic
     class DefaultHttpActionInvocation extends ActionInvocationDelegate<String> implements HttpActionInvocation {
 
-        /** Http request */
+        /**
+         * Http request.
+         */
         private final FullHttpRequest request;
 
-        /** Http response */
+        /**
+         * Http response.
+         */
         private final FullHttpResponse response;
 
-        /** ChannelHandlerContext */
+        /**
+         * ChannelHandlerContext.
+         */
         private final ChannelHandlerContext channelHandlerContext;
 
-        /** Store key-value */
+        /**
+         * Store key-value.
+         */
         private final Map<String, Object> contextMap;
 
         public DefaultHttpActionInvocation(ActionInvocation<String> invocation, FullHttpRequest request, //NOPMD ExcessiveParameterList

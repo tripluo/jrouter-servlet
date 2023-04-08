@@ -42,7 +42,9 @@ public abstract class AbstractJRouterFilter implements Filter {
      */
     protected ServletContext servletContext;
 
-    /** Set http request and response encoding */
+    /**
+     * Set http request and response encoding.
+     */
     @lombok.Getter
     @lombok.Setter
     private String encoding = null;
@@ -56,24 +58,34 @@ public abstract class AbstractJRouterFilter implements Filter {
     @lombok.Setter
     private boolean trimRequestParameter = false;
 
-    /** Use {@code ThreadLocal} to store Http parameter object or not */
+    /**
+     * Use {@code ThreadLocal} to store Http parameter object or not.
+     */
     @lombok.Getter
     @lombok.Setter
     private boolean useThreadLocal = true;
 
-    /** JRouter {@code ActionFactory} */
+    /**
+     * JRouter {@code ActionFactory}.
+     */
     @lombok.Getter
     private ActionFactory actionFactory;
 
-    /** Check if is {@code ServletActionFactory} */
+    /**
+     * Check if is {@code ServletActionFactory}.
+     */
     private boolean isServletActionFactory = false;
 
-    /** Set name of {@code ActionFactory} in ServletContext's attribute */
+    /**
+     * Set name of {@code ActionFactory} in ServletContext's attribute.
+     */
     @lombok.Getter
     @lombok.Setter
     private String factoryName = null;
 
-    /** Check if need to log {@code NotFoundException} */
+    /**
+     * Check if need to log {@code NotFoundException}.
+     */
     @lombok.Getter
     @lombok.Setter
     private boolean logNotFoundException = true;
@@ -205,7 +217,9 @@ public abstract class AbstractJRouterFilter implements Filter {
         ServletThreadContext.setResponse(response);
     }
 
-    /** TrimParameterRequestWrapper */
+    /**
+     * TrimParameterRequestWrapper
+     */
     private static final class TrimParameterRequestWrapper extends HttpServletRequestWrapper {
 
         /**

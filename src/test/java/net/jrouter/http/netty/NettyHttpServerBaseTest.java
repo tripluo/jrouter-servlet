@@ -30,16 +30,20 @@ import io.netty.handler.logging.LoggingHandler;
 import io.netty.util.NettyRuntime;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import lombok.extern.slf4j.Slf4j;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.BeforeSuite;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.TestInstance;
 
 /**
  * Netty Server Base Test.
  */
 @Slf4j
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class NettyHttpServerBaseTest {
 
-    /** Netty server port */
+    /**
+     * Netty server port
+     */
     private static final int PORT = 9998;
 
     // Configure the server.
@@ -50,16 +54,18 @@ public abstract class NettyHttpServerBaseTest {
     Channel serverChannel;
 
     /**
-     * Sub-classes need to know port so they can connect
+     * Subclasses need to know port so they can connect
      */
     public static int getPort() {
+
         return PORT;
     }
 
     public abstract HttpServerActionFactory getHttpServerActionFactory();
 
-    @BeforeSuite
-    public final void setUpNettyServer() throws Exception {
+    @BeforeAll
+    final void setUpNettyServer() throws Exception {
+
         ServerBootstrap serverBootstrap = new ServerBootstrap();
         serverBootstrap.option(ChannelOption.SO_BACKLOG, 1024);
         serverBootstrap.option(ChannelOption.SO_REUSEADDR, true);
@@ -73,6 +79,7 @@ public abstract class NettyHttpServerBaseTest {
 
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
+
                         ChannelPipeline pipeline = ch.pipeline();
                         pipeline.addLast("loggingHandler", new LoggingHandler(LogLevel.INFO));
 //                        pipeline.addLast("idleStateHandler", new IdleStateHandler(0, 0, 90, TimeUnit.SECONDS));
@@ -87,8 +94,9 @@ public abstract class NettyHttpServerBaseTest {
         log.info("Netty Server started on port(s):{}", PORT);
     }
 
-    @AfterSuite
-    public final void tearDownNettyServer() throws Exception {
+    @AfterAll
+    final void tearDownNettyServer() throws Exception {
+
         bossGroup.shutdownGracefully();
         serverChannel.closeFuture();
         workerGroup.shutdownGracefully();
