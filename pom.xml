@@ -5,11 +5,11 @@
     <parent>
         <groupId>net.jrouter</groupId>
         <artifactId>j-parent</artifactId>
-        <version>1.6</version>
+        <version>1.7</version>
     </parent>
     <artifactId>jrouter-servlet</artifactId>
     <packaging>jar</packaging>
-    <version>1.8.6</version>
+    <version>1.8.7</version>
     <name>JRouter-servlet</name>
     <url>https://github.com/tripluo/jrouter-servlet</url>
     <licenses>
@@ -42,7 +42,7 @@
         <dependency>
             <groupId>net.jrouter</groupId>
             <artifactId>jrouter</artifactId>
-            <version>1.8.6</version>
+            <version>${project.version}</version>
         </dependency>
         <!-- logback -->
         <dependency>
