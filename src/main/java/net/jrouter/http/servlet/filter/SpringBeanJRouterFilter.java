@@ -48,7 +48,7 @@ public class SpringBeanJRouterFilter extends AbstractJRouterFilter {
 
     @Override
     protected ActionFactory createActionFactory(FilterConfig filterConfig) {
-        //set ActionFactory with spring bean
+        // set ActionFactory with spring bean
         return beanName == null
                 ? WebApplicationContextUtils.getRequiredWebApplicationContext(filterConfig.getServletContext()).getBean(ActionFactory.class)
                 : WebApplicationContextUtils.getRequiredWebApplicationContext(filterConfig.getServletContext()).getBean(beanName, ActionFactory.class);

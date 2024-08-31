@@ -87,7 +87,7 @@ public interface ServletActionFactory extends ActionFactory<String> {
         @Override
         public <T> T invokeAction(String path, HttpServletRequest request, HttpServletResponse response,
                                   ServletContext sc) throws JRouterException {
-            //invoke and pass http parameters
+            // invoke and pass http parameters
             return (T) super.invokeAction(actionPathCaseSensitive ? path : path.toLowerCase(Locale.getDefault()),
                     request, response, sc);
         }
@@ -99,20 +99,20 @@ public interface ServletActionFactory extends ActionFactory<String> {
          */
         @Override
         protected ActionInvocation<String> createActionInvocation(String path, Object... params) {
-            //create servlet parameters ActionInvocation
+            // create servlet parameters ActionInvocation
             ActionInvocation<String> invocation = super.createActionInvocation(path, params);
             DefaultServletActionInvocation servletInvocation = null;
 
-            //优先从invokeAction参数中获取Http参数对象，已由invokeAction方法指定参数顺序
+            // 优先从invokeAction参数中获取Http参数对象，已由invokeAction方法指定参数顺序
             if (checkHttpParameters(params)) {
                 servletInvocation = new DefaultServletActionInvocation(invocation,
                         (HttpServletRequest) params[0],
                         (HttpServletResponse) params[1],
                         (ServletContext) params[2],
-                        //TODO
+                        // TODO
                         ServletThreadContext.getContextMap());
             }
-            //use ThreadLocal
+            // use ThreadLocal
             if (servletInvocation == null && useThreadLocal) {
                 servletInvocation = new DefaultServletActionInvocation(invocation,
                         ServletThreadContext.getRequest(),
@@ -121,14 +121,14 @@ public interface ServletActionFactory extends ActionFactory<String> {
                         ServletThreadContext.getContextMap());
             }
 
-            //store in ServletThreadContext ThreadLocal if needed
+            // store in ServletThreadContext ThreadLocal if needed
             if (useThreadLocal) {
                 ServletThreadContext.setActionInvocation(servletInvocation);
             }
             if (servletInvocation != null) {
                 return servletInvocation;
             } else {
-                //return ActionInvocation if can't get any http parameters and null DefaultServletActionInvocation
+                // return ActionInvocation if can't get any http parameters and null DefaultServletActionInvocation
                 return invocation;
             }
         }
@@ -201,11 +201,6 @@ public interface ServletActionFactory extends ActionFactory<String> {
         private final HttpServletResponse response;
 
         /**
-         * Http request parameters map
-         */
-        private final RequestMap requestMap;
-
-        /**
          * ServletContext
          */
         private final ServletContext servletContext;
@@ -220,7 +215,6 @@ public interface ServletActionFactory extends ActionFactory<String> {
             super();
             this.delegate = invocation;
             this.request = request;
-            this.requestMap = new RequestMap(request);
             this.response = response;
             this.servletContext = servletContext;
             this.contextMap = contextMap;
@@ -235,11 +229,6 @@ public interface ServletActionFactory extends ActionFactory<String> {
         @Override
         public HttpSession getSession() {
             return getRequest().getSession();
-        }
-
-        @Override
-        public Map<String, String[]> getRequestParameters() {
-            return this.requestMap;
         }
 
         @Override

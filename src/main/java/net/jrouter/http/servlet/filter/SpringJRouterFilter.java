@@ -20,6 +20,7 @@ package net.jrouter.http.servlet.filter;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.FilterConfig;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.jrouter.ActionFactory;
 import net.jrouter.config.Configuration;
@@ -34,20 +35,20 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  * @see net.jrouter.spring.SpringObjectFactory
  * @see net.jrouter.config.Configuration
  */
+@Getter
 @Slf4j
 public class SpringJRouterFilter extends JRouterFilter {
 
     /**
      * 默认使用springframework工厂创建新的对象实例。
      */
-    @lombok.Getter
     @lombok.Setter
     private boolean useSpringObjectFactory = true;
 
     @Override
     public void init(FilterConfig filterConfig) {
         String useSpring = filterConfig.getInitParameter("useSpringObjectFactory");
-        //default true if not set
+        // default true if not set
         if (useSpring != null) {
             useSpringObjectFactory = Boolean.parseBoolean(useSpring);
         }

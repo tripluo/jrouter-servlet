@@ -94,7 +94,7 @@ public class JRouterHttpRequestHandler extends ChannelInboundHandlerAdapter {
                         if (actionPath.startsWith(contextPath + PATH_SEPARATOR)) {
                             actionPath = actionPath.substring(contextPath.length());
                         } else {
-                            //not match context path
+                            // not match context path
                             log.warn("Uri not matched [{}] : {}", contextPath, actionPath);
                             fullHttpResponse.setStatus(HttpResponseStatus.NOT_FOUND);
                             break invoke;
@@ -174,7 +174,7 @@ public class JRouterHttpRequestHandler extends ChannelInboundHandlerAdapter {
         int start = 0;
         if (uri.charAt(0) != PATH_SEPARATOR) {
             int idx = uri.indexOf("://");
-            //no ://
+            // no ://
             if (idx > -1) {
                 int sepIdx = uri.indexOf(PATH_SEPARATOR, idx + 3);
                 if (sepIdx == -1) {
@@ -224,11 +224,11 @@ public class JRouterHttpRequestHandler extends ChannelInboundHandlerAdapter {
 
     public void setContextPath(String contextPath) {
         if (StringUtil.isNotEmpty(contextPath)) {
-            //fill first /
+            // fill first /
             if (contextPath.charAt(0) != PATH_SEPARATOR) {
                 contextPath = PATH_SEPARATOR + contextPath;
             }
-            //trim last /
+            // trim last /
             if (contextPath.length() > 1 && PATH_SEPARATOR == contextPath.charAt(contextPath.length() - 1)) {
                 contextPath = contextPath.substring(0, contextPath.length() - 1);
             }

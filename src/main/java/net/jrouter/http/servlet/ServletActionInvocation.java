@@ -46,13 +46,6 @@ public interface ServletActionInvocation extends ActionInvocation<String> {
     HttpSession getSession();
 
     /**
-     * Gets the HTTP servlet request parameters.
-     *
-     * @return the HTTP servlet request parameters.
-     */
-    Map<String, String[]> getRequestParameters();
-
-    /**
      * Gets the HTTP servlet response object.
      *
      * @return the HTTP servlet response object.

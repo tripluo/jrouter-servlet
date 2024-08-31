@@ -80,7 +80,7 @@ public interface HttpServerActionFactory extends ActionFactory<String> {
         @Override
         public <T> T invokeAction(String path, FullHttpRequest request, FullHttpResponse response,
                                   ChannelHandlerContext sc) throws JRouterException {
-            //invoke and pass http parameters
+            // invoke and pass http parameters
             return (T) super.invokeAction(actionPathCaseSensitive ? path : path.toLowerCase(Locale.getDefault()),
                     request, response, sc);
         }
@@ -92,11 +92,11 @@ public interface HttpServerActionFactory extends ActionFactory<String> {
          */
         @Override
         protected ActionInvocation<String> createActionInvocation(String path, Object... params) {
-            //create http parameters ActionInvocation
+            // create http parameters ActionInvocation
             ActionInvocation<String> invocation = super.createActionInvocation(path, params);
             DefaultHttpActionInvocation httpInvocation = null;
 
-            //优先从invokeAction参数中获取Http参数对象，已由invokeAction方法指定参数顺序
+            // 优先从invokeAction参数中获取Http参数对象，已由invokeAction方法指定参数顺序
             if (checkHttpParameters(params)) {
                 httpInvocation = new DefaultHttpActionInvocation(invocation,
                         (FullHttpRequest) params[0],
@@ -106,7 +106,7 @@ public interface HttpServerActionFactory extends ActionFactory<String> {
                 );
                 return httpInvocation;
             }
-            //return ActionInvocation if can't get any http parameters
+            // return ActionInvocation if can't get any http parameters
             return invocation;
         }
 

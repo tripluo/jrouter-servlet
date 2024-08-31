@@ -9,7 +9,7 @@
     </parent>
     <artifactId>jrouter-servlet</artifactId>
     <packaging>jar</packaging>
-    <version>1.8.7</version>
+    <version>1.8.8-SNAPSHOT</version>
     <name>JRouter-servlet</name>
     <url>https://github.com/tripluo/jrouter-servlet</url>
     <licenses>
@@ -137,6 +137,4 @@
             </plugin>
         </plugins>
     </build>
-    <profiles>
-    </profiles>
 </project>

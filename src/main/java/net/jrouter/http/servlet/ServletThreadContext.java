@@ -40,7 +40,7 @@ public final class ServletThreadContext {
     /**
      * Thread Safe.
      */
-    private static final ThreadLocal<ServletThreadContext> THREAD_LOCAL = ThreadLocal.withInitial(() -> new ServletThreadContext(new HashMap<String, Object>(8)));
+    private static final ThreadLocal<ServletThreadContext> THREAD_LOCAL = ThreadLocal.withInitial(() -> new ServletThreadContext(new HashMap<>(8)));
 
     /**
      * Store key-value.
@@ -61,11 +61,6 @@ public final class ServletThreadContext {
      * Http response.
      */
     private HttpServletResponse response;
-
-    /**
-     * Http modifiable request parameters map.
-     */
-    private RequestMap requestMap;
 
     /**
      * ServletContext.
@@ -100,9 +95,6 @@ public final class ServletThreadContext {
      */
     public static void remove() {
         Map map = null;
-        if ((map = getRequestParameters()) != null) {
-            map.clear();
-        }
         if ((map = getContextMap()) != null) {
             map.clear();
         }
@@ -147,7 +139,6 @@ public final class ServletThreadContext {
      */
     public static void setRequest(HttpServletRequest request) {
         get().request = request;
-        get().requestMap = new RequestMap(request);
     }
 
     /**
@@ -171,15 +162,6 @@ public final class ServletThreadContext {
      */
     public static HttpSession getSession(boolean create) {
         return getRequest().getSession(create);
-    }
-
-    /**
-     * Gets the HTTP servlet request parameters.
-     *
-     * @return the HTTP servlet request parameters.
-     */
-    public static Map<String, String[]> getRequestParameters() {
-        return get().requestMap;
     }
 
     /**

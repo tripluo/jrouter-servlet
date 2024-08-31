@@ -36,7 +36,7 @@ public class ObjectHandlerActionFactoryBean implements FactoryBean<ObjectHandler
      * Object class to ResultType mapping.
      */
     @lombok.Setter
-    private Map<Class, String> objectResultTypes = Collections.EMPTY_MAP;
+    private Map<Class, String> objectResultTypes = Collections.emptyMap();
 
     /**
      * Properties.
@@ -67,7 +67,7 @@ public class ObjectHandlerActionFactoryBean implements FactoryBean<ObjectHandler
                             resultType, classType, actionFactory.getDefaultResultType());
                 } else {
                     if (String.class == classType) {
-                        //String类型在PathActionFactory#invokeAction(...)中有做内置处理，除非有覆写此方法
+                        // String类型在PathActionFactory#invokeAction(...)中有做内置处理，除非有覆写此方法
                         LOG.warn("Set [java.lang.String] type is usually invalid when using PathActionFactory or it's subtypes");
                     }
                     LOG.info("Set ResultType [{}] for class [{}]", resultType, classType.getName());
@@ -75,7 +75,7 @@ public class ObjectHandlerActionFactoryBean implements FactoryBean<ObjectHandler
                 }
             }
         }
-        //use unmodifiable Map to avoid multi threading problem
+        // use unmodifiable Map to avoid multi threading problem
         actionFactory.setObjectResultTypes(Collections.unmodifiableMap(tmpObjectResultTypes));
 
     }

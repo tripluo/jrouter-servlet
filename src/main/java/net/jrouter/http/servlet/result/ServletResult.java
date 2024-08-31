@@ -74,7 +74,7 @@ public class ServletResult {
         }
 
         HttpServletRequest request = invocation.getRequest();
-        if (request.getContextPath() != null && request.getContextPath().length() > 0) {
+        if (request.getContextPath() != null && !request.getContextPath().isEmpty()) {
             location = request.getContextPath() + location; //NOPMD
         }
         request.getRequestDispatcher(location).forward(request, response);
@@ -95,7 +95,7 @@ public class ServletResult {
         }
 
         HttpServletRequest request = invocation.getRequest();
-        if (request.getContextPath() != null && request.getContextPath().length() > 0) {
+        if (request.getContextPath() != null && !request.getContextPath().isEmpty()) {
             location = request.getContextPath() + location; //NOPMD
         }
         response.sendRedirect(location);

@@ -101,14 +101,14 @@ public abstract class AbstractJRouterFilter implements Filter {
             encoding = varEncoding;
             log.info("Set character encoding : {}", encoding);
         }
-        //default true if not set
+        // default true if not set
         if (varUseThreadLocal != null) {
             useThreadLocal = Boolean.parseBoolean(varUseThreadLocal);
         }
         if (varTrimRequestParameter != null) {
             trimRequestParameter = Boolean.parseBoolean(varTrimRequestParameter);
         }
-        //default true if not set
+        // default true if not set
         if (varLogNotFoundException != null) {
             logNotFoundException = Boolean.parseBoolean(varLogNotFoundException);
         }
@@ -118,10 +118,10 @@ public abstract class AbstractJRouterFilter implements Filter {
         servletContext = filterConfig.getServletContext();
         try {
             if (useThreadLocal) {
-                //初始化ServletContext, 提供其他模块初始化调用
+                // 初始化ServletContext, 提供其他模块初始化调用
                 ServletThreadContext.setServletContext(servletContext);
             }
-            //create ActionFactory
+            // create ActionFactory
             actionFactory = createActionFactory(filterConfig);
             isServletActionFactory = (actionFactory instanceof ServletActionFactory);
         } finally {
@@ -150,12 +150,12 @@ public abstract class AbstractJRouterFilter implements Filter {
                 request = new TrimParameterRequestWrapper(request);
             }
         }
-        //create thread local
+        // create thread local
         if (useThreadLocal) {
             createServletThreadContext(request, response);
         }
         try {
-            //action url and invoke
+            // action url and invoke
             if (isServletActionFactory) {
                 ((ServletActionFactory) actionFactory).invokeAction(getActionPath(request), request, response, servletContext);
             } else {
