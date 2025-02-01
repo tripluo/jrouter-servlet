@@ -1,7 +1,5 @@
 package net.jrouter.http.servlet;
 
-import java.util.Collections;
-import java.util.Map;
 import lombok.Setter;
 import net.jrouter.ActionInvocation;
 import net.jrouter.impl.ResultTypeProxy;
@@ -9,8 +7,12 @@ import net.jrouter.util.MethodUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
+import java.util.Map;
+
 /**
- * 提供非{@code String}类型的结果类型处理，
+ * 提供非{@code String}类型的结果类型处理;
+ * <p>
  * 及可配置的类型{@code Class} - 结果类型{@link ResultTypeProxy}映射。
  */
 @Setter
@@ -26,11 +28,10 @@ public class ObjectHandlerActionFactory extends ServletActionFactory.DefaultServ
      * <p>
      * 完全类型匹配，不考虑父子类继承等。
      */
-    private Map<Class, ResultTypeProxy> objectResultTypes = Collections.emptyMap();
+    private Map<Class<?>, ResultTypeProxy> objectResultTypes = Collections.emptyMap();
 
     /**
      * Constructor.
-     *
      * @param properties Properties
      */
     public ObjectHandlerActionFactory(Properties properties) {

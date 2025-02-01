@@ -66,11 +66,11 @@ public class JRouterHttpRequestHandler extends ChannelInboundHandlerAdapter {
      */
     @lombok.Setter
     @lombok.NonNull
-    private BiPredicate<ChannelHandlerContext, FullHttpRequest> httpRequestPredicate = (channelHandlerContext, fullHttpRequest) -> true;
+    private BiPredicate<ChannelHandlerContext, FullHttpRequest> httpRequestPredicate = (channelHandlerContext,
+            fullHttpRequest) -> true;
 
     /**
      * Constructor.
-     *
      * @param httpServerActionFactory HttpServerActionFactory object.
      */
     public JRouterHttpRequestHandler(HttpServerActionFactory httpServerActionFactory) {
@@ -84,16 +84,17 @@ public class JRouterHttpRequestHandler extends ChannelInboundHandlerAdapter {
         FullHttpRequest fullHttpRequest;
         if (msg instanceof FullHttpRequest && httpRequestPredicate.test(ctx, fullHttpRequest = (FullHttpRequest) msg)) {
             try {
-                FullHttpResponse fullHttpResponse = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
+                FullHttpResponse fullHttpResponse = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1,
+                        HttpResponseStatus.OK);
                 String uri = fullHttpRequest.uri();
                 Object res = null;
-                invoke:
-                try {
+                invoke: try {
                     String actionPath = parseActionPath(fullHttpRequest);
                     if (StringUtil.isNotBlank(contextPath) && !PATH_SEPARATOR_STRING.equals(contextPath)) {
                         if (actionPath.startsWith(contextPath + PATH_SEPARATOR)) {
                             actionPath = actionPath.substring(contextPath.length());
-                        } else {
+                        }
+                        else {
                             // not match context path
                             log.warn("Uri not matched [{}] : {}", contextPath, actionPath);
                             fullHttpResponse.setStatus(HttpResponseStatus.NOT_FOUND);
@@ -101,29 +102,36 @@ public class JRouterHttpRequestHandler extends ChannelInboundHandlerAdapter {
                         }
                     }
                     res = httpServerActionFactory.invokeAction(actionPath, fullHttpRequest, fullHttpResponse, ctx);
-                } catch (NotFoundException e) {
+                }
+                catch (NotFoundException e) {
                     if (logNotFoundException) {
                         log.error("Not Found : {}", uri, e);
                     }
                     fullHttpResponse.setStatus(HttpResponseStatus.NOT_FOUND);
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     log.error("Internal Server Error : {}", uri, e);
                     fullHttpResponse.setStatus(HttpResponseStatus.INTERNAL_SERVER_ERROR);
                 }
                 if (res instanceof FullHttpResponse) {
                     writeHttpResponse(ctx, fullHttpRequest, (FullHttpResponse) res);
-                } else if (res instanceof HttpChunkedInput) {
-                    HttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, fullHttpResponse.headers());
+                }
+                else if (res instanceof HttpChunkedInput) {
+                    HttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK,
+                            fullHttpResponse.headers());
                     HttpUtil.setTransferEncodingChunked(response, true);
                     // Write the initial line and the header.
                     ctx.write(response);
-                    ChannelFuture lastContentFuture = ctx.writeAndFlush((HttpChunkedInput) res, ctx.newProgressivePromise());
-                    // HttpChunkedInput will write the end marker (LastHttpContent) for us.
+                    ChannelFuture lastContentFuture = ctx.writeAndFlush((HttpChunkedInput) res,
+                            ctx.newProgressivePromise());
+                    // HttpChunkedInput will write the end marker (LastHttpContent) for
+                    // us.
                     if (log.isDebugEnabled()) {
                         lastContentFuture.addListener(new ChannelProgressiveFutureListener() {
 
                             @Override
-                            public void operationProgressed(ChannelProgressiveFuture future, long progress, long total) {
+                            public void operationProgressed(ChannelProgressiveFuture future, long progress,
+                                    long total) {
                                 if (log.isDebugEnabled()) {
                                     log.debug(future.channel() + " Transfer progress: " + progress + " / " + total);
                                 }
@@ -142,22 +150,23 @@ public class JRouterHttpRequestHandler extends ChannelInboundHandlerAdapter {
                         // Close the connection when the whole content is written out.
                         lastContentFuture.addListener(ChannelFutureListener.CLOSE);
                     }
-                } else {
+                }
+                else {
                     writeHttpResponse(ctx, fullHttpRequest, fullHttpResponse, res);
                 }
-            } finally {
+            }
+            finally {
                 ReferenceCountUtil.release(msg);
             }
-        } else {
+        }
+        else {
             ctx.fireChannelRead(msg);
         }
     }
 
     /**
      * A hook to give subclass another way to create Action's invoke path.
-     *
      * @param request FullHttpRequest object.
-     *
      * @return Action's invoke path.
      */
     protected String parseActionPath(FullHttpRequest request) {
@@ -179,10 +188,12 @@ public class JRouterHttpRequestHandler extends ChannelInboundHandlerAdapter {
                 int sepIdx = uri.indexOf(PATH_SEPARATOR, idx + 3);
                 if (sepIdx == -1) {
                     return PATH_SEPARATOR_STRING;
-                } else {
+                }
+                else {
                     start = sepIdx;
                 }
-            } else {
+            }
+            else {
                 uri = PATH_SEPARATOR + uri;
             }
         }
@@ -218,7 +229,7 @@ public class JRouterHttpRequestHandler extends ChannelInboundHandlerAdapter {
      * Write http response.
      */
     protected void writeHttpResponse(ChannelHandlerContext ctx, FullHttpRequest request, FullHttpResponse response,
-                                     Object invokedRes) {
+            Object invokedRes) {
         writeHttpResponse(ctx, request, response);
     }
 

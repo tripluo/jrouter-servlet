@@ -49,7 +49,8 @@ public abstract class NettyHttpServerBaseTest {
     // Configure the server.
     EventLoopGroup bossGroup = new NioEventLoopGroup(1, new DefaultThreadFactory("http-boss"));
 
-    EventLoopGroup workerGroup = new NioEventLoopGroup(NettyRuntime.availableProcessors() * 2, new DefaultThreadFactory("http-worker"));
+    EventLoopGroup workerGroup = new NioEventLoopGroup(NettyRuntime.availableProcessors() * 2,
+            new DefaultThreadFactory("http-worker"));
 
     Channel serverChannel;
 
@@ -73,22 +74,24 @@ public abstract class NettyHttpServerBaseTest {
         serverBootstrap.childOption(ChannelOption.SO_KEEPALIVE, true);
 
         serverBootstrap.group(bossGroup, workerGroup)
-                .channel(NioServerSocketChannel.class)
-                .handler(new LoggingHandler(LogLevel.INFO))
-                .childHandler(new ChannelInitializer<SocketChannel>() {
+            .channel(NioServerSocketChannel.class)
+            .handler(new LoggingHandler(LogLevel.INFO))
+            .childHandler(new ChannelInitializer<SocketChannel>() {
 
-                    @Override
-                    protected void initChannel(SocketChannel ch) throws Exception {
+                @Override
+                protected void initChannel(SocketChannel ch) throws Exception {
 
-                        ChannelPipeline pipeline = ch.pipeline();
-                        pipeline.addLast("loggingHandler", new LoggingHandler(LogLevel.INFO));
-//                        pipeline.addLast("idleStateHandler", new IdleStateHandler(0, 0, 90, TimeUnit.SECONDS));
-                        pipeline.addLast("httpRequestDecoder", new HttpRequestDecoder());
-                        pipeline.addLast("httpResponseEncoder", new HttpResponseEncoder());
-                        pipeline.addLast("httpObjectAggregator", new HttpObjectAggregator(10 * 1024 * 1024));
-                        pipeline.addLast("jrouterHttpRequestHandler", new JRouterHttpRequestHandler(getHttpServerActionFactory()));
-                    }
-                });
+                    ChannelPipeline pipeline = ch.pipeline();
+                    pipeline.addLast("loggingHandler", new LoggingHandler(LogLevel.INFO));
+                    // pipeline.addLast("idleStateHandler", new IdleStateHandler(0, 0, 90,
+                    // TimeUnit.SECONDS));
+                    pipeline.addLast("httpRequestDecoder", new HttpRequestDecoder());
+                    pipeline.addLast("httpResponseEncoder", new HttpResponseEncoder());
+                    pipeline.addLast("httpObjectAggregator", new HttpObjectAggregator(10 * 1024 * 1024));
+                    pipeline.addLast("jrouterHttpRequestHandler",
+                            new JRouterHttpRequestHandler(getHttpServerActionFactory()));
+                }
+            });
 
         serverChannel = serverBootstrap.bind(PORT).syncUninterruptibly().channel();
         log.info("Netty Server started on port(s):{}", PORT);
@@ -102,4 +105,5 @@ public abstract class NettyHttpServerBaseTest {
         workerGroup.shutdownGracefully();
         log.info("Netty Server closed on port(s):{}", PORT);
     }
+
 }

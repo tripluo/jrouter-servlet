@@ -17,11 +17,11 @@
 
 package net.jrouter.http.servlet;
 
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.Map;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import net.jrouter.ActionInvocation;
 import net.jrouter.annotation.Dynamic;
 
@@ -33,36 +33,32 @@ public interface ServletActionInvocation extends ActionInvocation<String> {
 
     /**
      * Gets the HTTP servlet request object.
-     *
      * @return the HTTP servlet request object.
      */
     HttpServletRequest getRequest();
 
     /**
      * Gets the HTTP servlet session object.
-     *
      * @return the HTTP servlet session object.
      */
     HttpSession getSession();
 
     /**
      * Gets the HTTP servlet response object.
-     *
      * @return the HTTP servlet response object.
      */
     HttpServletResponse getResponse();
 
     /**
      * Gets the servlet context.
-     *
      * @return the servlet context.
      */
     ServletContext getServletContext();
 
     /**
      * Get Invocation Context Map.
-     *
      * @return the Context Map.
      */
     Map<String, Object> getContextMap();
+
 }

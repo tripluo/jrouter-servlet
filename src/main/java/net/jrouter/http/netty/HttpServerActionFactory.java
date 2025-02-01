@@ -20,10 +20,6 @@ package net.jrouter.http.netty;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
 import net.jrouter.ActionFactory;
 import net.jrouter.ActionInvocation;
 import net.jrouter.JRouterException;
@@ -32,23 +28,26 @@ import net.jrouter.annotation.Dynamic;
 import net.jrouter.impl.PathActionFactory;
 import net.jrouter.support.ActionInvocationDelegate;
 
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
 /**
  * {@code HttpServerActionFactory} invoke Action with Http parameters.
  */
 public interface HttpServerActionFactory extends ActionFactory<String> {
 
     /**
-     * Use this instead of {@link #invokeAction(Object, Object...)} to pass Http parameters.
-     *
+     * Use this instead of {@link #invokeAction(Object, Object...)} to pass Http
+     * parameters.
      * @param <T> Generic type.
      * @param path Action path.
      * @param request FullHttpRequest.
      * @param response FullHttpResponse.
      * @param context ChannelHandlerContext.
-     *
      * @return Action invoked result.
-     *
-     * @throws JRouterException if error occurrs.
+     * @throws JRouterException if error occurs.
      * @see #invokeAction(Object, Object...)
      */
     <T> T invokeAction(String path, FullHttpRequest request, FullHttpResponse response, ChannelHandlerContext context)
@@ -57,7 +56,7 @@ public interface HttpServerActionFactory extends ActionFactory<String> {
     /**
      * 提供{@code ServletActionFactory}接口默认实现。覆写{@link #createActionInvocation}方法创建{@code HttpServerActionFactory}接口对象。
      *
-     * @see #createActionInvocation(java.lang.String, java.lang.Object...)
+     * @see #createActionInvocation
      */
     class DefaultHttpActionFactory extends PathActionFactory implements HttpServerActionFactory {
 
@@ -69,7 +68,6 @@ public interface HttpServerActionFactory extends ActionFactory<String> {
 
         /**
          * Constructor.
-         *
          * @param properties Properties
          */
         public DefaultHttpActionFactory(Properties properties) {
@@ -79,7 +77,7 @@ public interface HttpServerActionFactory extends ActionFactory<String> {
 
         @Override
         public <T> T invokeAction(String path, FullHttpRequest request, FullHttpResponse response,
-                                  ChannelHandlerContext sc) throws JRouterException {
+                ChannelHandlerContext sc) throws JRouterException {
             // invoke and pass http parameters
             return (T) super.invokeAction(actionPathCaseSensitive ? path : path.toLowerCase(Locale.getDefault()),
                     request, response, sc);
@@ -87,7 +85,6 @@ public interface HttpServerActionFactory extends ActionFactory<String> {
 
         /**
          * 创建并返回{@link ChannelHandlerContext}接口对象。
-         *
          * @return {@link ChannelHandlerContext}接口对象。
          */
         @Override
@@ -98,12 +95,8 @@ public interface HttpServerActionFactory extends ActionFactory<String> {
 
             // 优先从invokeAction参数中获取Http参数对象，已由invokeAction方法指定参数顺序
             if (checkHttpParameters(params)) {
-                httpInvocation = new DefaultHttpActionInvocation(invocation,
-                        (FullHttpRequest) params[0],
-                        (FullHttpResponse) params[1],
-                        (ChannelHandlerContext) params[2],
-                        new HashMap<>(4)
-                );
+                httpInvocation = new DefaultHttpActionInvocation(invocation, (FullHttpRequest) params[0],
+                        (FullHttpResponse) params[1], (ChannelHandlerContext) params[2], new HashMap<>(4));
                 return httpInvocation;
             }
             // return ActionInvocation if can't get any http parameters
@@ -112,18 +105,15 @@ public interface HttpServerActionFactory extends ActionFactory<String> {
 
         /**
          * 检测{@link #invokeAction}方法传递过来参数的正确性。
-         *
          * @param params 由{@link #invokeAction}方法传递过来参数。
-         *
          * @return 参数是否为正确的Http参数对象。
          *
-         * @see #invokeAction(String, FullHttpRequest, FullHttpResponse, ChannelHandlerContext)
+         * @see #invokeAction(String, FullHttpRequest,
+         * FullHttpResponse,ChannelHandlerContext)
          */
         private boolean checkHttpParameters(Object... params) {
-            return params != null && params.length == 3
-                    && (params[0] instanceof FullHttpRequest)
-                    && (params[1] instanceof FullHttpResponse)
-                    && (params[2] instanceof ChannelHandlerContext);
+            return params != null && params.length == 3 && (params[0] instanceof FullHttpRequest)
+                    && (params[1] instanceof FullHttpResponse) && (params[2] instanceof ChannelHandlerContext);
         }
 
         /**
@@ -153,7 +143,9 @@ public interface HttpServerActionFactory extends ActionFactory<String> {
                 }
                 super.afterPropertiesSet();
             }
+
         }
+
     }
 
     /**
@@ -182,8 +174,10 @@ public interface HttpServerActionFactory extends ActionFactory<String> {
          */
         private final Map<String, Object> contextMap;
 
-        public DefaultHttpActionInvocation(ActionInvocation<String> invocation, FullHttpRequest request, //NOPMD ExcessiveParameterList
-                                           FullHttpResponse response, ChannelHandlerContext channelHandlerContext, Map<String, Object> contextMap) {
+        public DefaultHttpActionInvocation(ActionInvocation<String> invocation, FullHttpRequest request, // NOPMD
+                                                                                                         // ExcessiveParameterList
+                FullHttpResponse response, ChannelHandlerContext channelHandlerContext,
+                Map<String, Object> contextMap) {
             super();
             this.delegate = invocation;
             this.request = request;
@@ -212,6 +206,7 @@ public interface HttpServerActionFactory extends ActionFactory<String> {
         public Map<String, Object> getContextMap() {
             return contextMap;
         }
+
     }
 
 }

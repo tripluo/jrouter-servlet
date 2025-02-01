@@ -11,7 +11,7 @@
 <dependency>
     <groupId>net.jrouter</groupId>
     <artifactId>jrouter-servlet</artifactId>
-    <version>1.8.7</version>
+    <version>1.8.8</version>
 </dependency>
 ```
 

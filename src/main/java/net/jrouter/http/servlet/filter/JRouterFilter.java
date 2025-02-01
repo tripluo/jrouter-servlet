@@ -17,13 +17,14 @@
 
 package net.jrouter.http.servlet.filter;
 
-import javax.servlet.FilterConfig;
+import jakarta.servlet.FilterConfig;
 import lombok.extern.slf4j.Slf4j;
 import net.jrouter.ActionFactory;
 import net.jrouter.config.Configuration;
 
 /**
- * JRouter servlet filter.通过configLocation配置{@code Configuration}进而加载{@code ActionFactory}对象。
+ * JRouter servlet filter.
+ * 通过configLocation配置{@code Configuration}进而加载{@code ActionFactory}对象。
  *
  * @see net.jrouter.config.Configuration
  */
@@ -33,7 +34,8 @@ import net.jrouter.config.Configuration;
 public class JRouterFilter extends AbstractJRouterFilter {
 
     /**
-     * Location of the jrouter ActionFactory's configuration file, default load resource file net.jrouter.xml.
+     * Location of the jrouter ActionFactory's configuration file, default load resource
+     * file net.jrouter.xml.
      */
     private String configLocation = "net.jrouter.xml";
 
