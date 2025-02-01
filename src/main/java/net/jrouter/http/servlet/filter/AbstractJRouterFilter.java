@@ -17,12 +17,10 @@
 
 package net.jrouter.http.servlet.filter;
 
-import java.io.IOException;
-import java.util.Map;
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequestWrapper;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import net.jrouter.ActionFactory;
 import net.jrouter.NotFoundException;
@@ -31,8 +29,11 @@ import net.jrouter.http.servlet.ServletThreadContext;
 import net.jrouter.impl.InvocationProxyException;
 import net.jrouter.util.StringUtil;
 
+import java.io.IOException;
+import java.util.Map;
+
 /**
- * 抽象 JRouter servlet filter.
+ * Abstract JRouter servlet filter.
  */
 @Slf4j
 public abstract class AbstractJRouterFilter implements Filter {
@@ -52,7 +53,7 @@ public abstract class AbstractJRouterFilter implements Filter {
     /**
      * 是否对HttpServletRequest Parameter值做去除首位空白处理；默认不处理。
      *
-     * @see HttpServletRequest#getParameter(java.lang.String)
+     * @see HttpServletRequest#getParameter
      */
     @lombok.Getter
     @lombok.Setter
@@ -124,7 +125,8 @@ public abstract class AbstractJRouterFilter implements Filter {
             // create ActionFactory
             actionFactory = createActionFactory(filterConfig);
             isServletActionFactory = (actionFactory instanceof ServletActionFactory);
-        } finally {
+        }
+        finally {
             if (useThreadLocal) {
                 ServletThreadContext.remove();
             }
@@ -136,8 +138,8 @@ public abstract class AbstractJRouterFilter implements Filter {
     }
 
     @Override
-    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException,
-            ServletException {
+    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
+            throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
         if (encoding != null) {
@@ -157,21 +159,26 @@ public abstract class AbstractJRouterFilter implements Filter {
         try {
             // action url and invoke
             if (isServletActionFactory) {
-                ((ServletActionFactory) actionFactory).invokeAction(getActionPath(request), request, response, servletContext);
-            } else {
+                ((ServletActionFactory) actionFactory).invokeAction(getActionPath(request), request, response,
+                        servletContext);
+            }
+            else {
                 actionFactory.invokeAction(getActionPath(request));
             }
             if (!response.isCommitted()) {
                 chain.doFilter(request, response);
             }
-        } catch (NotFoundException e) {
+        }
+        catch (NotFoundException e) {
             if (logNotFoundException) {
                 log.error("Not Found - {}", request.getRequestURI(), e);
             }
             response.sendError(HttpServletResponse.SC_NOT_FOUND, e.getMessage());
-        } catch (InvocationProxyException e) {
-            throw new ServletException(e.getSource()); //NOPMD PreserveStackTrace
-        } finally {
+        }
+        catch (InvocationProxyException e) {
+            throw new ServletException(e.getSource()); // NOPMD PreserveStackTrace
+        }
+        finally {
             if (useThreadLocal) {
                 ServletThreadContext.remove();
             }
@@ -180,9 +187,7 @@ public abstract class AbstractJRouterFilter implements Filter {
 
     /**
      * A hook to give subclass another way to create {@code ActionFactory}.
-     *
      * @param filterConfig 过滤器配置。
-     *
      * @return ActionFactory对象。
      */
     abstract ActionFactory createActionFactory(FilterConfig filterConfig);
@@ -197,9 +202,7 @@ public abstract class AbstractJRouterFilter implements Filter {
 
     /**
      * Get the action's path from http request.
-     *
      * @param request HttpServletRequest.
-     *
      * @return the action's path.
      */
     protected String getActionPath(HttpServletRequest request) {
@@ -208,7 +211,6 @@ public abstract class AbstractJRouterFilter implements Filter {
 
     /**
      * Put request and response in thread local variable.
-     *
      * @param request HttpServletRequest.
      * @param response HttpServletResponse.
      */
@@ -224,7 +226,6 @@ public abstract class AbstractJRouterFilter implements Filter {
 
         /**
          * Constructs a request object wrapping the given request.
-         *
          * @throws java.lang.IllegalArgumentException if the request is null
          */
         public TrimParameterRequestWrapper(HttpServletRequest request) {
@@ -241,4 +242,5 @@ public abstract class AbstractJRouterFilter implements Filter {
         }
 
     }
+
 }

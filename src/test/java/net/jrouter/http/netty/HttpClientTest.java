@@ -36,11 +36,11 @@ class HttpClientTest extends JRouterHttpRequestHandlerTest {
     @Test
     void test100() {
         ValidatableResponse vs = RestUtil.givenNetty()
-                .when()
-                .get("/test/test100")
-                .then()
-                .statusCode(200)
-                .body(equalTo("/test100"));
+            .when()
+            .get("/test/test100")
+            .then()
+            .statusCode(200)
+            .body(equalTo("/test100"));
         vs.log().all();
     }
 
@@ -50,11 +50,12 @@ class HttpClientTest extends JRouterHttpRequestHandlerTest {
     @Test
     void test200() {
         ValidatableResponse vs = RestUtil.givenNetty()
-                .when()
-                .get("/test/test200")
-                .then()
-                .statusCode(200)
-                .body(equalTo("/test200"));
+            .when()
+            .get("/test/test200")
+            .then()
+            .statusCode(200)
+            .body(equalTo("/test200"));
         vs.log().all();
     }
+
 }

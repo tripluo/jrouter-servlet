@@ -38,7 +38,6 @@ public class HttpResult {
 
     /**
      * @param invocation Action运行时上下文。
-     *
      * @return 返回forward后的调用结果。
      */
     @ResultType(type = TEXT)
@@ -49,4 +48,5 @@ public class HttpResult {
         response.content().writeCharSequence(Objects.toString(res, StringUtil.EMPTY_STRING), StandardCharsets.UTF_8);
         return res;
     }
+
 }

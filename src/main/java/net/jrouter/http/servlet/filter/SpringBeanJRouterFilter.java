@@ -17,7 +17,7 @@
 
 package net.jrouter.http.servlet.filter;
 
-import javax.servlet.FilterConfig;
+import jakarta.servlet.FilterConfig;
 import lombok.extern.slf4j.Slf4j;
 import net.jrouter.ActionFactory;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -50,7 +50,10 @@ public class SpringBeanJRouterFilter extends AbstractJRouterFilter {
     protected ActionFactory createActionFactory(FilterConfig filterConfig) {
         // set ActionFactory with spring bean
         return beanName == null
-                ? WebApplicationContextUtils.getRequiredWebApplicationContext(filterConfig.getServletContext()).getBean(ActionFactory.class)
-                : WebApplicationContextUtils.getRequiredWebApplicationContext(filterConfig.getServletContext()).getBean(beanName, ActionFactory.class);
+                ? WebApplicationContextUtils.getRequiredWebApplicationContext(filterConfig.getServletContext())
+                    .getBean(ActionFactory.class)
+                : WebApplicationContextUtils.getRequiredWebApplicationContext(filterConfig.getServletContext())
+                    .getBean(beanName, ActionFactory.class);
     }
+
 }

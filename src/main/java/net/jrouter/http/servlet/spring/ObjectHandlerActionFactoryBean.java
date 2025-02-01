@@ -1,8 +1,5 @@
 package net.jrouter.http.servlet.spring;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import net.jrouter.http.servlet.ObjectHandlerActionFactory;
 import net.jrouter.http.servlet.ServletActionFactory;
 import net.jrouter.impl.ResultTypeProxy;
@@ -16,11 +13,15 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 提供与springframework集成的{@code ObjectHandlerActionFactory}对象。
  */
-public class ObjectHandlerActionFactoryBean implements FactoryBean<ObjectHandlerActionFactory>, InitializingBean,
-        DisposableBean, ApplicationContextAware {
+public class ObjectHandlerActionFactoryBean
+        implements FactoryBean<ObjectHandlerActionFactory>, InitializingBean, DisposableBean, ApplicationContextAware {
 
     /**
      * LOG.
@@ -36,7 +37,7 @@ public class ObjectHandlerActionFactoryBean implements FactoryBean<ObjectHandler
      * Object class to ResultType mapping.
      */
     @lombok.Setter
-    private Map<Class, String> objectResultTypes = Collections.emptyMap();
+    private Map<Class<?>, String> objectResultTypes = Collections.emptyMap();
 
     /**
      * Properties.
@@ -50,25 +51,27 @@ public class ObjectHandlerActionFactoryBean implements FactoryBean<ObjectHandler
     private ObjectHandlerActionFactory actionFactory;
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         if (properties == null) {
             properties = new ServletActionFactory.DefaultServletActionFactory.Properties();
             properties.setObjectFactory(new SpringObjectFactory(applicationContext));
         }
         actionFactory = new ObjectHandlerActionFactory(properties);
-        Map<Class, ResultTypeProxy> tmpObjectResultTypes = new HashMap<>(2);
+        Map<Class<?>, ResultTypeProxy> tmpObjectResultTypes = new HashMap<>(2);
         if (objectResultTypes != null && !objectResultTypes.isEmpty()) {
-            for (Map.Entry<Class, String> e : objectResultTypes.entrySet()) {
-                Class classType = e.getKey();
+            for (Map.Entry<Class<?>, String> e : objectResultTypes.entrySet()) {
+                Class<?> classType = e.getKey();
                 String resultType = e.getValue();
                 ResultTypeProxy type = actionFactory.getResultTypes().get(resultType);
                 if (type == null) {
-                    LOG.info("Can't find ResultType [{}] for [{}], use default [{}]",
-                            resultType, classType, actionFactory.getDefaultResultType());
-                } else {
+                    LOG.info("Can't find ResultType [{}] for [{}], use default [{}]", resultType, classType,
+                            actionFactory.getDefaultResultType());
+                }
+                else {
                     if (String.class == classType) {
                         // String类型在PathActionFactory#invokeAction(...)中有做内置处理，除非有覆写此方法
-                        LOG.warn("Set [java.lang.String] type is usually invalid when using PathActionFactory or it's subtypes");
+                        LOG.warn(
+                                "Set [java.lang.String] type is usually invalid when using PathActionFactory or it's subtypes");
                     }
                     LOG.info("Set ResultType [{}] for class [{}]", resultType, classType.getName());
                     tmpObjectResultTypes.put(classType, type);

@@ -9,24 +9,19 @@ import net.jrouter.http.netty.NettyHttpServerBaseTest;
 public class RestUtil {
 
     static {
-//        RestAssured.registerParser(MediaType.TEXT_PLAIN_VALUE, Parser.TEXT);
+        // RestAssured.registerParser(MediaType.TEXT_PLAIN_VALUE, Parser.TEXT);
     }
 
     public static RequestSpecification givenNetty() {
-        return RestAssured
-                .given()
-                .port(NettyHttpServerBaseTest.getPort());
+        return RestAssured.given().port(NettyHttpServerBaseTest.getPort());
     }
 
     public static RequestSpecification given(int port) {
-        return RestAssured
-                .given()
-                .port(port);
+        return RestAssured.given().port(port);
     }
 
     public static RequestSpecification givenLog(int port) {
-        return given(port)
-                .log()
-                .all();
+        return given(port).log().all();
     }
+
 }

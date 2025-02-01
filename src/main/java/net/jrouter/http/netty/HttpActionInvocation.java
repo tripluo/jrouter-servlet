@@ -32,29 +32,26 @@ public interface HttpActionInvocation extends ActionInvocation<String> {
 
     /**
      * Gets the HTTP request object.
-     *
      * @return the HTTP request object.
      */
     FullHttpRequest getRequest();
 
     /**
      * Gets the HTTP response object.
-     *
      * @return the HTTP response object.
      */
     FullHttpResponse getResponse();
 
     /**
      * Gets the {@code ChannelHandlerContext} object.
-     *
      * @return the {@code ChannelHandlerContext} object.
      */
     ChannelHandlerContext getChannelHandlerContext();
 
     /**
      * Get Invocation Context Map.
-     *
      * @return the Context Map.
      */
     Map<String, Object> getContextMap();
+
 }

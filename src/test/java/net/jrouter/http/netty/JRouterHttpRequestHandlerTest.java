@@ -63,7 +63,8 @@ class JRouterHttpRequestHandlerTest extends NettyHttpServerBaseTest {
     public HttpServerActionFactory getHttpServerActionFactory() {
         HttpServerActionFactory.DefaultHttpActionFactory.Properties properties = new HttpServerActionFactory.DefaultHttpActionFactory.Properties();
         properties.setDefaultResultType(HttpResult.TEXT);
-        HttpServerActionFactory.DefaultHttpActionFactory actionFactory = new HttpServerActionFactory.DefaultHttpActionFactory(properties);
+        HttpServerActionFactory.DefaultHttpActionFactory actionFactory = new HttpServerActionFactory.DefaultHttpActionFactory(
+                properties);
         actionFactory.addResultTypes(new HttpResult());
         actionFactory.addActions(DemoAction.class);
         return actionFactory;

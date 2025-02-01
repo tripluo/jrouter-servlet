@@ -17,9 +17,9 @@
 
 package net.jrouter.http.servlet.filter;
 
+import jakarta.servlet.FilterConfig;
 import java.util.HashMap;
 import java.util.Map;
-import javax.servlet.FilterConfig;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.jrouter.ActionFactory;
@@ -62,10 +62,11 @@ public class SpringJRouterFilter extends JRouterFilter {
         configuration.load(getConfigLocation());
         if (useSpringObjectFactory) {
             Map<String, Object> actionFactoryProperties = new HashMap<>(2);
-            actionFactoryProperties.put("objectFactory",
-                    new SpringObjectFactory(WebApplicationContextUtils.getRequiredWebApplicationContext(filterConfig.getServletContext())));
+            actionFactoryProperties.put("objectFactory", new SpringObjectFactory(
+                    WebApplicationContextUtils.getRequiredWebApplicationContext(filterConfig.getServletContext())));
             configuration.addActionFactoryProperties(actionFactoryProperties);
         }
         return configuration.buildActionFactory();
     }
+
 }

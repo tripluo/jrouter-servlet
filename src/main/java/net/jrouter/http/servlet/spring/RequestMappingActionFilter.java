@@ -42,7 +42,8 @@ public class RequestMappingActionFilter implements ActionFilter {
         RequestMapping mapping = method.getAnnotation(RequestMapping.class);
         if (mapping == null) {
             return action;
-        } else {
+        }
+        else {
             // use mapping's value/name, ignore action's value/name
             String[] values = mapping.value();
             if (CollectionUtil.isEmpty(values)) {
@@ -51,11 +52,11 @@ public class RequestMappingActionFilter implements ActionFilter {
             if (CollectionUtil.isEmpty(values)) {
                 String name = mapping.name();
                 if (StringUtil.isNotBlank(name)) {
-                    values = new String[]{name};
+                    values = new String[] { name };
                 }
             }
             if (CollectionUtil.isEmpty(values)) {
-                values = new String[]{method.getName()};
+                values = new String[] { method.getName() };
             }
 
             final String[] paths = values;
@@ -108,4 +109,5 @@ public class RequestMappingActionFilter implements ActionFilter {
     public Namespace getNamespace(Object obj, Method method) {
         return method.getDeclaringClass().getAnnotation(Namespace.class);
     }
+
 }
