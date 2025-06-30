@@ -1,21 +1,22 @@
-
 **jrouter-servlet** 是一个基于[jrouter](https://github.com/tripluo/jrouter)的Servlet组件；提供快速的路由定位、方法调用、参数绑定等功能。其核心设计目标即小而精、代码少、轻量级、易扩展、Restful。
 
-● require [jdk 1.8+](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
+● require [jdk 17+](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 
 ◇ [changelog](https://github.com/tripluo/jrouter-servlet/commits/master)
 
 ### Maven: ###
 
 ```xml
+
 <dependency>
     <groupId>net.jrouter</groupId>
     <artifactId>jrouter-servlet</artifactId>
-    <version>1.8.8</version>
+    <version>2.0.0</version>
 </dependency>
 ```
 
-###  JavaConfig: ###
+### JavaConfig: ###
+
 ```
 import javax.servlet.DispatcherType;
 import net.jrouter.ActionFactory;
@@ -67,9 +68,10 @@ import org.springframework.context.annotation.Bean;
 
 ### Web Filter配置: ###
 
-Sample [web.xml](https://github.com/tripluo/jrouter-home/blob/master/src/main/webapp/WEB-INF/web.xml) of project [jrouter-home](https://github.com/tripluo/jrouter-home)
+Sample [web.xml](https://github.com/tripluo/jrouter-home/blob/master/src/main/webapp/WEB-INF/web.xml.bak) of project [jrouter-home](https://github.com/tripluo/jrouter-home)
 
 ```xml
+
 <filter>
     <filter-name>JRouter-Filter</filter-name>
     <filter-class>net.jrouter.http.servlet.filter.SpringBeanJRouterFilter</filter-class>
@@ -100,16 +102,17 @@ Sample [web.xml](https://github.com/tripluo/jrouter-home/blob/master/src/main/we
     </init-param>
 </filter>
 ```
+
 ### Springframework Integration: ###
 
-Sample [spring.xml](https://github.com/tripluo/jrouter-home/blob/master/src/main/resources/jrouter-home-spring.xml)
+Sample [spring.xml](https://github.com/tripluo/jrouter-home/blob/master/src/main/resources/jrouter-home-spring.xml.bak)
 
 ```xml
 <!-- JRouter ActionFactory -->
 <bean id="servletActionFactory" class="net.jrouter.http.servlet.spring.ObjectHandlerActionFactoryBean">
     <!-- deprecated since 1.7.5 <property name="defaultObjectResultType" value="freemarker" />-->
     <property name="actionFactoryProperties">
-        <util:properties location="classpath:jrouterActionFactory.properties" />
+        <util:properties location="classpath:jrouterActionFactory.properties"/>
     </property>
     <property name="interceptors">
         <list>
@@ -125,7 +128,7 @@ Sample [spring.xml](https://github.com/tripluo/jrouter-home/blob/master/src/main
     <property name="resultTypes">
         <list>
             <value>net.jrouter.http.servlet.result.ServletResult</value>
-            <ref bean="freemarkerResult" />
+            <ref bean="freemarkerResult"/>
         </list>
     </property>
     <!-- scan classes properties -->
